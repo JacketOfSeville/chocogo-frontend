@@ -15,6 +15,10 @@ export interface CatalogProduct {
   estoque?: number // undefined = no estoque record
 }
 
+interface CatalogOptions {
+  includeInactive?: boolean
+}
+
 function toPriceNumber(value: string | number): number {
   if (typeof value === 'number') {
     return value
@@ -65,7 +69,7 @@ function toAbsoluteImageUrl(url: string): string {
   return `${root}${url.startsWith('/') ? '' : '/'}${url}`
 }
 
-export async function getCatalogProducts(): Promise<CatalogProduct[]> {
+export async function getCatalogProducts(options: CatalogOptions = {}): Promise<CatalogProduct[]> {
   const [produtos, imagens, produtoCategorias, categorias, estoques] = await Promise.all([
     fetchApi<Produto[]>('/produtos'),
     fetchApi<ProdutoImagem[]>('/produto-imagens'),
@@ -99,7 +103,7 @@ export async function getCatalogProducts(): Promise<CatalogProduct[]> {
   }
 
   return produtos
-    .filter((produto) => produto.ativo)
+    .filter((produto) => (options.includeInactive ? true : produto.ativo))
     .map((produto) => {
     const sortedImages = sortImages(imagesByProduct.get(produto.id) ?? [])
     const selectedImage = pickMainImage(sortedImages)

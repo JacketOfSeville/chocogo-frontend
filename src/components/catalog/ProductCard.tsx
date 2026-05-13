@@ -8,9 +8,10 @@ const currency = new Intl.NumberFormat('pt-BR', {
 
 interface ProductCardProps {
   product: CatalogProduct
+  onSelect?: (product: CatalogProduct) => void
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, onSelect }: ProductCardProps) {
   const hasCategories = product.categories.length > 0
   const images = product.imageUrls
   const hasMultipleImages = images.length > 1
@@ -41,11 +42,32 @@ export function ProductCard({ product }: ProductCardProps) {
     })
   }
 
+  function onCardClick() {
+    if (outOfStock || !onSelect) {
+      return
+    }
+
+    onSelect(product)
+  }
+
+  function onCardKeyDown(event: React.KeyboardEvent<HTMLElement>) {
+    if (outOfStock || !onSelect) {
+      return
+    }
+
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onSelect(product)
+    }
+  }
+
   return (
     <article
       className={`product-card${outOfStock ? ' opacity-50 grayscale pointer-events-none select-none' : ''}`}
       tabIndex={outOfStock ? -1 : 0}
       aria-disabled={outOfStock}
+      onClick={onCardClick}
+      onKeyDown={onCardKeyDown}
     >
       <div className="relative h-44 overflow-hidden bg-cacao-50 sm:h-52">
         {currentImageUrl ? (
@@ -60,7 +82,10 @@ export function ProductCard({ product }: ProductCardProps) {
           <>
             <button
               type="button"
-              onClick={showPreviousImage}
+              onClick={(event) => {
+                event.stopPropagation()
+                showPreviousImage()
+              }}
               aria-label="Imagem anterior"
               className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-2 py-1 text-lg leading-none text-cacao-800 shadow transition hover:bg-white"
               disabled={outOfStock}
@@ -69,7 +94,10 @@ export function ProductCard({ product }: ProductCardProps) {
             </button>
             <button
               type="button"
-              onClick={showNextImage}
+              onClick={(event) => {
+                event.stopPropagation()
+                showNextImage()
+              }}
               aria-label="Proxima imagem"
               className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-2 py-1 text-lg leading-none text-cacao-800 shadow transition hover:bg-white"
               disabled={outOfStock}
