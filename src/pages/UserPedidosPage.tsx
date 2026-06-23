@@ -7,6 +7,34 @@ import type { Pedido } from '../types/api'
 
 const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 
+const STATUS_LABELS: Record<number, string> = {
+  1: 'Recebido',
+  2: 'Em preparo',
+  3: 'Em rota',
+  4: 'Concluido',
+  5: 'Cancelado',
+}
+
+function getStatusLabel(statusId: number): string {
+  return STATUS_LABELS[statusId] ?? `Status #${statusId}`
+}
+
+function statusClasses(statusId: number): string {
+  if (statusId === 4) {
+    return 'bg-emerald-100 text-emerald-800'
+  }
+
+  if (statusId === 5) {
+    return 'bg-red-100 text-red-700'
+  }
+
+  if (statusId === 3) {
+    return 'bg-sky-100 text-sky-700'
+  }
+
+  return 'bg-cacao-100 text-cacao-800'
+}
+
 export function UserPedidosPage() {
   const [session, setSession] = useState(() => getSession())
   const [pedidos, setPedidos] = useState<Pedido[]>([])
@@ -80,6 +108,12 @@ export function UserPedidosPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-semibold text-cacao-900">Pedido #{pedido.id}</p>
+                      <p className="mt-1 text-sm text-cacao-700">
+                        Status:{' '}
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${statusClasses(pedido.id_status_pedido)}`}>
+                          {getStatusLabel(pedido.id_status_pedido)}
+                        </span>
+                      </p>
                       <p className="text-sm text-cacao-700">Pagamento: {pedido.meio_pagamento}</p>
                       <p className="mt-1 text-sm font-semibold text-cacao-800">
                         Total: {currency.format(Number(pedido.valor_total))}

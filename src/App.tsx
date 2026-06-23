@@ -6,6 +6,8 @@ import { AdminLoginPage } from './pages/AdminLoginPage'
 import { AdminProdutoCreatePage } from './pages/AdminProdutoCreatePage'
 import { AdminProdutoEditPage } from './pages/AdminProdutoEditPage'
 import { AdminProdutosPage } from './pages/AdminProdutosPage'
+import { AdminPedidoManagePage } from './pages/AdminPedidoManagePage'
+import { AdminPedidosPage } from './pages/AdminPedidosPage'
 import { CatalogPage } from './pages/CatalogPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
@@ -83,6 +85,8 @@ function App() {
         <Route path="produtos" element={<AdminProdutosPage />} />
         <Route path="produtos/novo" element={<AdminProdutoCreatePage />} />
         <Route path="produtos/:id/editar" element={<AdminProdutoEditPage />} />
+        <Route path="pedidos" element={<AdminPedidosPage />} />
+        <Route path="pedidos/:id" element={<AdminPedidoManagePage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

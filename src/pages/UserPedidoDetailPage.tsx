@@ -13,6 +13,37 @@ const ENTREGA_LABELS: Record<number, string> = {
   2: 'Retirada',
 }
 
+function getDeliveryProgressLabel(pedido: Pedido): string {
+  const isRetirada = pedido.id_tipo_entrega === 2
+  const isEntrega = pedido.id_tipo_entrega === 1
+
+  if (isRetirada) {
+    if (pedido.pronto_retirada) {
+      return 'Pronto para retirada'
+    }
+
+    return 'Em preparo para retirada'
+  }
+
+  if (isEntrega) {
+    if (pedido.entregue) {
+      return 'Entregue'
+    }
+
+    if (pedido.id_status_pedido === 3) {
+      return 'Saiu para entrega'
+    }
+
+    if (pedido.id_status_pedido === 2) {
+      return 'Em preparo'
+    }
+
+    return 'Aguardando processamento'
+  }
+
+  return 'Status indisponivel'
+}
+
 export function UserPedidoDetailPage() {
   const [session, setSession] = useState(() => getSession())
   const [pedido, setPedido] = useState<Pedido | null>(null)
@@ -137,6 +168,10 @@ export function UserPedidoDetailPage() {
                 <div className="flex justify-between">
                   <dt className="text-cacao-700">Tipo de entrega</dt>
                   <dd className="font-semibold">{ENTREGA_LABELS[pedido.id_tipo_entrega] ?? pedido.id_tipo_entrega}</dd>
+                </div>
+                <div className="flex justify-between">
+                  <dt className="text-cacao-700">Status da entrega</dt>
+                  <dd className="font-semibold">{getDeliveryProgressLabel(pedido)}</dd>
                 </div>
               </dl>
 

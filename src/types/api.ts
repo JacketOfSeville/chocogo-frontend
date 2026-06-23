@@ -64,9 +64,12 @@ export interface Pedido {
   id_endereco: number | null
   id_status_pedido: number
   id_tipo_entrega: number
+  pronto_retirada?: boolean
+  entregue?: boolean
   meio_pagamento: string
   valor_total: string | number
   valor_frete: string | number
+  data_pedido?: string
   data_criacao?: string
 }
 

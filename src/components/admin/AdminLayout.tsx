@@ -28,6 +28,9 @@ export function AdminLayout() {
           <NavLink to="/admin/produtos" className={({ isActive }) => sidebarLinkClass(isActive)}>
             Produtos
           </NavLink>
+          <NavLink to="/admin/pedidos" className={({ isActive }) => sidebarLinkClass(isActive)}>
+            Pedidos
+          </NavLink>
         </nav>
 
         <div className="mt-auto space-y-2 pt-6">

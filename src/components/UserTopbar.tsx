@@ -13,8 +13,8 @@ export function UserTopbar({ session, onLogout }: UserTopbarProps) {
   const navLinks = [
     { to: '/', label: 'Catalogo' },
     { to: '/carrinho', label: 'Carrinho' },
-    { to: '/meus-pedidos', label: 'Meus pedidos' },
-    { to: '/meus-enderecos', label: 'Meus enderecos' },
+    { to: '/meus-pedidos', label: 'Pedidos' },
+    { to: '/meus-enderecos', label: 'Endereços' },
   ]
 
   return (
