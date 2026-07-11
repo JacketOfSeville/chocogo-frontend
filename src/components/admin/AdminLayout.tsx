@@ -28,8 +28,14 @@ export function AdminLayout() {
           <NavLink to="/admin/produtos" className={({ isActive }) => sidebarLinkClass(isActive)}>
             Produtos
           </NavLink>
+          <NavLink to="/admin/categorias" className={({ isActive }) => sidebarLinkClass(isActive)}>
+            Categorias
+          </NavLink>
           <NavLink to="/admin/pedidos" className={({ isActive }) => sidebarLinkClass(isActive)}>
             Pedidos
+          </NavLink>
+          <NavLink to="/admin/usuarios" className={({ isActive }) => sidebarLinkClass(isActive)}>
+            Usuarios
           </NavLink>
         </nav>
 

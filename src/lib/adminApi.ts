@@ -57,6 +57,11 @@ interface CreateProdutoCategoriaInput {
   id_categoria: number
 }
 
+export interface CategoriaInput {
+  nome: string
+  descricao?: string
+}
+
 interface UploadImageInput {
   id_produto: number
   file: File
@@ -176,6 +181,29 @@ export async function deleteProdutoImagem(id: number, token: string): Promise<vo
 
 export async function listCategorias(token: string): Promise<Categoria[]> {
   return requestApi<Categoria[]>('/categorias', {
+    token,
+  })
+}
+
+export async function createCategoria(input: CategoriaInput, token: string): Promise<Categoria> {
+  return requestApi<Categoria>('/categorias', {
+    method: 'POST',
+    token,
+    body: input,
+  })
+}
+
+export async function updateCategoria(id: number, input: Partial<CategoriaInput>, token: string): Promise<Categoria> {
+  return requestApi<Categoria>(`/categorias/${id}`, {
+    method: 'PUT',
+    token,
+    body: input,
+  })
+}
+
+export async function deleteCategoria(id: number, token: string): Promise<void> {
+  await requestApi<void>(`/categorias/${id}`, {
+    method: 'DELETE',
     token,
   })
 }

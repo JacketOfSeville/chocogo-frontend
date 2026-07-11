@@ -12,6 +12,7 @@ import {
   deleteCarrinhoItem,
   ensureCarrinho,
   listCarrinhoItens,
+  notifyCartUpdated,
   updateCarrinhoItem,
   type CheckoutInput,
 } from '../lib/cartApi'
@@ -252,6 +253,7 @@ export function UserCarrinhoPage() {
       // Backend already deleted all carrinho_itens; clear client state and localStorage
       setItems([])
       localStorage.removeItem(LS_CARRINHO_ITEMS)
+      notifyCartUpdated()
       navigate(`/meus-pedidos/${result.pedido.id}`)
     } catch (checkoutError) {
       const message = checkoutError instanceof Error ? checkoutError.message : 'Nao foi possivel realizar o pedido.'

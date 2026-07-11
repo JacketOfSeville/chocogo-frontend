@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "ChocoGo",
+  "short_name": "ChocoGo",
+  "description": "Catalogo e pedidos da ChocoGo com suporte offline.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f7efe7",
+  "theme_color": "#5a2e1b",
+  "icons": [
+    {
+      "src": "/pwa/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,6 +1,12 @@
 import { requestApi } from './apiClient'
 import type { Carrinho, CarrinhoItem } from '../types/api'
 
+export const CART_UPDATED_EVENT = 'chocogo:cart-updated'
+
+export function notifyCartUpdated() {
+  window.dispatchEvent(new Event(CART_UPDATED_EVENT))
+}
+
 export interface CheckoutInput {
   id_endereco?: number | null
   id_status_pedido: number
@@ -75,19 +81,25 @@ export async function listCarrinhoItens(carrinhoId: number, token: string): Prom
 }
 
 export async function createCarrinhoItem(input: CarrinhoItemInput, token: string): Promise<CarrinhoItem> {
-  return requestApi<CarrinhoItem>('/carrinho-itens', {
+  const item = await requestApi<CarrinhoItem>('/carrinho-itens', {
     method: 'POST',
     token,
     body: input,
   })
+
+  notifyCartUpdated()
+  return item
 }
 
 export async function updateCarrinhoItem(id: number, input: CarrinhoItemUpdateInput, token: string): Promise<CarrinhoItem> {
-  return requestApi<CarrinhoItem>(`/carrinho-itens/${id}`, {
+  const item = await requestApi<CarrinhoItem>(`/carrinho-itens/${id}`, {
     method: 'PUT',
     token,
     body: input,
   })
+
+  notifyCartUpdated()
+  return item
 }
 
 export async function deleteCarrinhoItem(id: number, token: string): Promise<void> {
@@ -95,6 +107,8 @@ export async function deleteCarrinhoItem(id: number, token: string): Promise<voi
     method: 'DELETE',
     token,
   })
+
+  notifyCartUpdated()
 }
 
 export async function addProdutoAoCarrinho(produtoId: number, quantidade: number, token: string): Promise<void> {

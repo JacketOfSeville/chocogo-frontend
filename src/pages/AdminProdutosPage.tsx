@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { deleteProduto, listProdutos, type ProdutoResponse } from '../lib/adminApi'
+import { deleteProduto, listEstoques, listProdutos, type ProdutoResponse } from '../lib/adminApi'
 import { getAdminSession } from '../lib/authStorage'
 
 export function AdminProdutosPage() {
   const session = getAdminSession()
   const [produtos, setProdutos] = useState<ProdutoResponse[]>([])
+  const [estoqueByProdutoId, setEstoqueByProdutoId] = useState<Record<number, number>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [isDeletingId, setIsDeletingId] = useState<number | null>(null)
   const [error, setError] = useState('')
@@ -31,12 +32,28 @@ export function AdminProdutosPage() {
       setError('')
 
       try {
-        const list = await listProdutos(token)
+        const [list, estoques] = await Promise.all([listProdutos(token), listEstoques(token)])
         if (!mounted) {
           return
         }
 
         setProdutos(list)
+
+        const mappedStock = new Map<number, { id: number; quantidade: number }>()
+        for (const item of estoques) {
+          const previous = mappedStock.get(item.id_produto)
+
+          if (!previous || item.id > previous.id) {
+            mappedStock.set(item.id_produto, { id: item.id, quantidade: item.quantidade })
+          }
+        }
+
+        const stockRecord: Record<number, number> = {}
+        for (const [idProduto, stock] of mappedStock.entries()) {
+          stockRecord[idProduto] = stock.quantidade
+        }
+
+        setEstoqueByProdutoId(stockRecord)
       } catch (requestError) {
         if (!mounted) {
           return
@@ -120,6 +137,7 @@ export function AdminProdutosPage() {
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Nome</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">SKU</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Preco</th>
+                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Estoque</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Ativo</th>
                   <th className="px-4 py-3 text-right font-semibold text-cacao-700">Acoes</th>
                 </tr>
@@ -135,6 +153,7 @@ export function AdminProdutosPage() {
                         currency: 'BRL',
                       })}
                     </td>
+                    <td className="px-4 py-3 text-cacao-700">{estoqueByProdutoId[produto.id] ?? 0}</td>
                     <td className="px-4 py-3 text-cacao-700">{produto.ativo ? 'Sim' : 'Nao'}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-2">

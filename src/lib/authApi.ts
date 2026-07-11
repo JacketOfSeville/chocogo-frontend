@@ -1,5 +1,5 @@
 import { requestApi } from './apiClient'
-import type { AuthSession } from './authStorage'
+import type { AuthSession, AuthUser } from './authStorage'
 
 interface LoginRequestBody {
   email?: string
@@ -16,6 +16,12 @@ export interface RegisterInput {
   email?: string
   telefone?: string
   senha: string
+}
+
+export interface UpdateCurrentUserInput {
+  nome?: string
+  email?: string
+  telefone?: string
 }
 
 function toIdentifierBody(identifier: string, senha: string): LoginRequestBody {
@@ -44,5 +50,21 @@ export async function registerUser(input: RegisterInput): Promise<AuthSession> {
   return requestApi<AuthSession>('/auth/register', {
     method: 'POST',
     body: payload,
+  })
+}
+
+export async function updateCurrentUser(input: UpdateCurrentUserInput, token: string): Promise<AuthUser> {
+  const nome = input.nome?.trim()
+  const email = input.email?.trim()
+  const telefone = input.telefone?.trim()
+
+  return requestApi<AuthUser>('/auth/me', {
+    method: 'PUT',
+    token,
+    body: {
+      ...(nome !== undefined ? { nome } : {}),
+      ...(email ? { email } : {}),
+      ...(telefone ? { telefone } : {}),
+    },
   })
 }

@@ -5,7 +5,7 @@ import { CatalogGrid } from '../components/catalog/CatalogGrid'
 import { CatalogEmptyState, CatalogErrorState, CatalogLoadingState } from '../components/catalog/CatalogStates'
 import { getCatalogProducts, type CatalogProduct } from '../lib/catalogService'
 import { clearSession, getSession } from '../lib/authStorage'
-import { addProdutoAoCarrinho, getCartItemCount } from '../lib/cartApi'
+import { addProdutoAoCarrinho } from '../lib/cartApi'
 
 type LoadStatus = 'loading' | 'success' | 'empty' | 'error'
 
@@ -17,7 +17,6 @@ export function CatalogPage() {
   const [products, setProducts] = useState<CatalogProduct[]>([])
   const [nameFilter, setNameFilter] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
-  const [cartCount, setCartCount] = useState(0)
   const [selectedProduct, setSelectedProduct] = useState<CatalogProduct | null>(null)
   const [modalQuantity, setModalQuantity] = useState(1)
   const [modalError, setModalError] = useState('')
@@ -31,7 +30,6 @@ export function CatalogPage() {
   function onLogout() {
     clearSession()
     setSession(null)
-    setCartCount(0)
   }
 
   function openProductModal(product: CatalogProduct) {
@@ -45,15 +43,6 @@ export function CatalogPage() {
     setModalQuantity(1)
     setModalError('')
     setIsAddingToCart(false)
-  }
-
-  async function refreshCartCount(token: string) {
-    try {
-      const count = await getCartItemCount(token)
-      setCartCount(count)
-    } catch {
-      setCartCount(0)
-    }
   }
 
   async function onAddToCart() {
@@ -72,7 +61,6 @@ export function CatalogPage() {
 
     try {
       await addProdutoAoCarrinho(selectedProduct.id, modalQuantity, accessToken)
-      await refreshCartCount(accessToken)
       closeProductModal()
     } catch (addError) {
       const message = addError instanceof Error ? addError.message : 'Nao foi possivel adicionar ao carrinho.'
@@ -162,16 +150,6 @@ export function CatalogPage() {
     }
   }, [])
 
-  useEffect(() => {
-    if (!accessToken) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setCartCount(0)
-      return
-    }
-
-    void refreshCartCount(accessToken)
-  }, [accessToken])
-
   return (
     <main className="catalog-shell">
       <header className="catalog-topbar">
@@ -185,6 +163,12 @@ export function CatalogPage() {
             {session ? (
               <>
                 <span className="px-2 text-sm font-medium text-cacao-700">Ola, {session.user.nome}</span>
+                <Link
+                  to="/minha-conta"
+                  className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
+                >
+                  Minha conta
+                </Link>
                 <Link
                   to="/meus-enderecos"
                   className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
@@ -256,6 +240,13 @@ export function CatalogPage() {
                     >
                       Ola, {session.user.nome}
                     </button>
+                    <Link
+                      to="/minha-conta"
+                      className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Minha conta
+                    </Link>
                     <Link
                       to="/meus-enderecos"
                       className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
@@ -362,15 +353,6 @@ export function CatalogPage() {
             <p className="text-cacao-700">Ajuste o nome ou a categoria para encontrar os produtos desejados.</p>
           </section>
         ))}
-
-      <Link
-        to="/carrinho"
-        className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full bg-cacao-700 px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-cacao-900"
-      >
-        <span aria-hidden="true">🛒</span>
-        Carrinho
-        {session ? <span className="rounded-full bg-white/20 px-2 py-0.5 text-xs">{cartCount}</span> : null}
-      </Link>
 
       {selectedProduct ? (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-cacao-900/40 p-4" role="dialog" aria-modal="true">
