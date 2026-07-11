@@ -173,7 +173,7 @@ export function CatalogPage() {
                   to="/meus-enderecos"
                   className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
                 >
-                  Meus enderecos
+                  Meus endereços
                 </Link>
                 <Link
                   to="/meus-pedidos"
@@ -252,7 +252,7 @@ export function CatalogPage() {
                       className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Meus enderecos
+                      Meus endereços
                     </Link>
                     <Link
                       to="/meus-pedidos"

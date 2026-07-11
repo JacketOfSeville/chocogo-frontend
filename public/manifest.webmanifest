@@ -2,7 +2,7 @@
   "id": "/",
   "name": "ChocoGo",
   "short_name": "ChocoGo",
-  "description": "Catalogo e pedidos da ChocoGo com suporte offline.",
+  "description": "Catálogo e pedidos da ChocoGo com suporte offline.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

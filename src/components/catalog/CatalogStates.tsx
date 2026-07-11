@@ -32,7 +32,7 @@ export function CatalogEmptyState() {
 export function CatalogErrorState({ error, onRetry }: CatalogErrorStateProps) {
   return (
     <section className="rounded-2xl border border-cacao-200 bg-white p-6 text-center shadow-card">
-      <h2 className="mb-2 text-2xl text-cacao-900">Falha ao carregar o catalogo</h2>
+      <h2 className="mb-2 text-2xl text-cacao-900">Falha ao carregar o catálogo</h2>
       <p className="mb-4 text-cacao-700">{error}</p>
       <button
         className="rounded-full bg-cacao-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900"

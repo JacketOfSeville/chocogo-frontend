@@ -41,7 +41,7 @@ export function UserEnderecosPage() {
           return
         }
 
-        const message = loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar os enderecos.'
+        const message = loadError instanceof Error ? loadError.message : 'Não foi possível carregar os endereços.'
         setError(message)
       } finally {
         if (mounted) {
@@ -68,13 +68,13 @@ export function UserEnderecosPage() {
 
   async function onDelete(id: number) {
     if (!accessToken) {
-      setError('Sessao invalida. Faca login novamente.')
+      setError('Sessão inválida. Faça login novamente.')
       return
     }
 
     const token = accessToken
 
-    const confirmed = window.confirm('Deseja remover este endereco?')
+    const confirmed = window.confirm('Deseja remover este endereço?')
     if (!confirmed) {
       return
     }
@@ -86,9 +86,9 @@ export function UserEnderecosPage() {
     try {
       await deleteEndereco(id, token)
       setEnderecos((previous) => previous.filter((item) => item.id !== id))
-      setSuccess('Endereco removido com sucesso.')
+      setSuccess('Endereço removido com sucesso.')
     } catch (deleteError) {
-      const message = deleteError instanceof Error ? deleteError.message : 'Nao foi possivel remover o endereco.'
+      const message = deleteError instanceof Error ? deleteError.message : 'Não foi possível remover o endereço.'
       setError(message)
     } finally {
       setIsDeletingId(null)
@@ -103,15 +103,15 @@ export function UserEnderecosPage() {
         <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-3xl text-cacao-900">Meus enderecos</h1>
-              <p className="mt-1 text-sm text-cacao-700">Gerencie seus enderecos de entrega.</p>
+              <h1 className="text-3xl text-cacao-900">Meus endereços</h1>
+              <p className="mt-1 text-sm text-cacao-700">Gerencie seus endereços de entrega.</p>
             </div>
 
             <Link
               to="/meus-enderecos/novo"
               className="inline-flex items-center justify-center rounded-full bg-cacao-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900"
             >
-              Novo endereco
+              Novo endereço
             </Link>
           </div>
 

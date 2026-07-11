@@ -53,7 +53,7 @@ export function UserEnderecoEditPage() {
           return
         }
 
-        const message = loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar o endereco.'
+        const message = loadError instanceof Error ? loadError.message : 'Não foi possível carregar o endereço.'
         setError(message)
       } finally {
         if (mounted) {
@@ -83,7 +83,7 @@ export function UserEnderecoEditPage() {
 
     if (!form || !accessToken) {
       if (!accessToken) {
-        setError('Sessao invalida. Faca login novamente.')
+        setError('Sessão inválida. Faça login novamente.')
       }
       return
     }
@@ -102,7 +102,7 @@ export function UserEnderecoEditPage() {
       await updateEndereco(enderecoId, payload, token)
       navigate('/meus-enderecos', { replace: true })
     } catch (submitError) {
-      const message = submitError instanceof Error ? submitError.message : 'Nao foi possivel atualizar o endereco.'
+      const message = submitError instanceof Error ? submitError.message : 'Não foi possível atualizar o endereço.'
       setError(message)
     } finally {
       setIsSubmitting(false)
@@ -115,14 +115,14 @@ export function UserEnderecoEditPage() {
 
       <section className="mx-auto w-full max-w-3xl px-4 sm:px-6 md:px-8">
         <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-          <h1 className="mb-2 text-3xl text-cacao-900">Editar endereco</h1>
-          <p className="mb-5 text-sm text-cacao-700">Atualize os dados do seu endereco.</p>
+          <h1 className="mb-2 text-3xl text-cacao-900">Editar endereço</h1>
+          <p className="mb-5 text-sm text-cacao-700">Atualize os dados do seu endereço.</p>
 
           {!Number.isInteger(enderecoId) || enderecoId <= 0 ? (
-            <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Endereco invalido.</p>
+            <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Endereço inválido.</p>
           ) : null}
 
-          {isLoading ? <p className="text-sm text-cacao-700">Carregando endereco...</p> : null}
+          {isLoading ? <p className="text-sm text-cacao-700">Carregando endereço...</p> : null}
 
           {!isLoading && form ? (
             <form className="space-y-3" onSubmit={onSubmit}>
@@ -195,7 +195,7 @@ export function UserEnderecoEditPage() {
                   checked={Boolean(form.principal)}
                   onChange={(event) => setForm((previous) => (previous ? { ...previous, principal: event.target.checked } : previous))}
                 />
-                Endereco principal
+                Endereço principal
               </label>
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -204,7 +204,7 @@ export function UserEnderecoEditPage() {
                   disabled={isSubmitting}
                   className="rounded-full bg-cacao-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isSubmitting ? 'Salvando...' : 'Salvar alteracoes'}
+                  {isSubmitting ? 'Salvando...' : 'Salvar alterações'}
                 </button>
 
                 <Link

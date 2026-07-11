@@ -100,7 +100,7 @@ export function RegisterPage() {
             </Link>
 
             <Link to="/" className="text-sm font-medium text-cacao-700 underline underline-offset-4">
-              Voltar ao catalogo
+              Voltar ao catálogo
             </Link>
           </div>
         </form>

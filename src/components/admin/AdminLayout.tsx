@@ -41,7 +41,7 @@ export function AdminLayout() {
 
         <div className="mt-auto space-y-2 pt-6">
           <NavLink to="/" className="block rounded-xl border border-cacao-200 px-3 py-2 text-sm font-semibold text-cacao-700 hover:bg-cacao-50">
-            Ver catalogo
+            Ver catálogo
           </NavLink>
           <button
             type="button"

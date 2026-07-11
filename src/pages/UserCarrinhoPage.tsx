@@ -1,18 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
-
-
-// LocalStorage keys
-const LS_CARRINHO_ID = 'carrinhoId'
-const LS_CARRINHO_ITEMS = 'carrinhoItems'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { clearSession, getSession } from '../lib/authStorage'
 import { UserTopbar } from '../components/UserTopbar'
 import {
+  clearPersistedCarrinho,
   checkoutCarrinho,
   deleteCarrinhoItem,
   ensureCarrinho,
+  getPersistedCarrinhoId,
+  getPersistedCarrinhoItens,
   listCarrinhoItens,
   notifyCartUpdated,
+  persistCarrinhoId,
+  persistCarrinhoItens,
   updateCarrinhoItem,
   type CheckoutInput,
 } from '../lib/cartApi'
@@ -34,20 +34,8 @@ const CHECKOUT_TIPO_ENTREGA_RETIRADA_ID = 2
 export function UserCarrinhoPage() {
   const navigate = useNavigate()
   const [session, setSession] = useState(() => getSession())
-  // restore localStorage
-  const [carrinhoId, setCarrinhoId] = useState<number | null>(() => {
-    const raw = localStorage.getItem(LS_CARRINHO_ID)
-    return raw ? Number(raw) : null
-  })
-  const [items, setItems] = useState<CarrinhoItem[]>(() => {
-    const raw = localStorage.getItem(LS_CARRINHO_ITEMS)
-    if (!raw) return []
-    try {
-      return JSON.parse(raw)
-    } catch {
-      return []
-    }
-  })
+  const [carrinhoId, setCarrinhoId] = useState<number | null>(() => getPersistedCarrinhoId())
+  const [items, setItems] = useState<CarrinhoItem[]>(() => getPersistedCarrinhoItens())
   const [products, setProducts] = useState<CatalogProduct[]>([])
   const [enderecos, setEnderecos] = useState<Endereco[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -134,12 +122,12 @@ export function UserCarrinhoPage() {
   // Persist to localStorage
   useEffect(() => {
     if (carrinhoId) {
-      localStorage.setItem(LS_CARRINHO_ID, String(carrinhoId))
+      persistCarrinhoId(carrinhoId)
     }
   }, [carrinhoId])
 
   useEffect(() => {
-    localStorage.setItem(LS_CARRINHO_ITEMS, JSON.stringify(items))
+    persistCarrinhoItens(items)
   }, [items])
 
   if (!session || !accessToken) {
@@ -252,7 +240,7 @@ export function UserCarrinhoPage() {
       const result = await checkoutCarrinho(carrinhoId, checkoutPayload, token)
       // Backend already deleted all carrinho_itens; clear client state and localStorage
       setItems([])
-      localStorage.removeItem(LS_CARRINHO_ITEMS)
+      clearPersistedCarrinho()
       notifyCartUpdated()
       navigate(`/meus-pedidos/${result.pedido.id}`)
     } catch (checkoutError) {
@@ -366,7 +354,7 @@ export function UserCarrinhoPage() {
                   onChange={(event) => setEnderecoId(event.target.value ? Number(event.target.value) : null)}
                   className="w-full rounded-xl border border-cacao-200 bg-white px-3 py-2 text-cacao-900 outline-none ring-cacao-600/50 transition focus:ring"
                 >
-                  <option value="">Selecione um endereco</option>
+                  <option value="">Selecione um endereço</option>
                   {enderecos
                     .filter((endereco) => endereco.id_usuario === session.user.id)
                     .map((endereco) => (

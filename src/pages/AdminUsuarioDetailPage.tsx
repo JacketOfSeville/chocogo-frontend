@@ -117,7 +117,7 @@ export function AdminUsuarioDetailPage() {
   }
 
   if (!Number.isInteger(userId) || userId <= 0) {
-    return <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Usuario invalido.</p>
+    return <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Usuário inválido.</p>
   }
 
   return (
@@ -125,15 +125,15 @@ export function AdminUsuarioDetailPage() {
       <header className="rounded-3xl border border-cacao-200/90 bg-white/80 p-6 shadow-card backdrop-blur-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Usuarios</p>
-            <h2 className="text-3xl text-cacao-900">Detalhes do usuario</h2>
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Usuários</p>
+            <h2 className="text-3xl text-cacao-900">Detalhes do usuário</h2>
           </div>
 
           <Link
             to="/admin/usuarios"
             className="inline-flex rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
           >
-            Voltar para usuarios
+            Voltar para usuários
           </Link>
         </div>
       </header>
@@ -141,7 +141,7 @@ export function AdminUsuarioDetailPage() {
       {error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 
       {isLoading ? (
-        <p className="rounded-2xl border border-cacao-200 bg-white p-5 text-sm text-cacao-700 shadow-card">Carregando dados do usuario...</p>
+        <p className="rounded-2xl border border-cacao-200 bg-white p-5 text-sm text-cacao-700 shadow-card">Carregando dados do usuário...</p>
       ) : usuario ? (
         <>
           <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
@@ -157,7 +157,7 @@ export function AdminUsuarioDetailPage() {
                 <dd className="font-semibold text-cacao-900">#{usuario.id}</dd>
               </div>
               <div>
-                <dt className="text-cacao-600">Criacao</dt>
+                <dt className="text-cacao-600">Criação</dt>
                 <dd className="font-semibold text-cacao-900">{parseDate(usuario.data_criacao)}</dd>
               </div>
               <div>
@@ -172,9 +172,9 @@ export function AdminUsuarioDetailPage() {
           </section>
 
           <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-            <h3 className="text-xl text-cacao-900">Enderecos</h3>
+            <h3 className="text-xl text-cacao-900">Endereços</h3>
             {usuario.endereco.length === 0 ? (
-              <p className="mt-2 text-sm text-cacao-700">Nenhum endereco cadastrado.</p>
+              <p className="mt-2 text-sm text-cacao-700">Nenhum endereço cadastrado.</p>
             ) : (
               <div className="mt-4 space-y-3">
                 {usuario.endereco.map((endereco) => (
@@ -186,7 +186,7 @@ export function AdminUsuarioDetailPage() {
                       {endereco.bairro} - {endereco.cidade} | CEP {endereco.cep}
                     </p>
                     {endereco.complemento ? <p className="text-sm text-cacao-700">{endereco.complemento}</p> : null}
-                    {endereco.principal ? <p className="mt-1 text-xs font-semibold text-cacao-600">Endereco principal</p> : null}
+                    {endereco.principal ? <p className="mt-1 text-xs font-semibold text-cacao-600">Endereço principal</p> : null}
                   </article>
                 ))}
               </div>
