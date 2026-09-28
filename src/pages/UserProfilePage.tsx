@@ -5,6 +5,7 @@ import { UserTopbar } from '../components/UserTopbar'
 import { updateCurrentUser } from '../lib/authApi'
 import type { AuthSession } from '../lib/authStorage'
 import { clearSession, getSession, saveSession } from '../lib/authStorage'
+import { usePushNotifications } from '../hooks/usePushNotifications'
 
 export function UserProfilePage() {
   const [session, setSession] = useState(() => getSession())
@@ -14,6 +15,7 @@ export function UserProfilePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const push = usePushNotifications(session?.accessToken)
 
   if (!session) {
     return <Navigate to="/login" replace />
@@ -131,6 +133,24 @@ export function UserProfilePage() {
           </button>
         </form>
       </section>
+
+      {push.isSupported ? (
+        <section className="mx-auto w-full max-w-2xl rounded-3xl border border-cacao-200 bg-white p-6 shadow-card sm:p-8">
+          <h2 className="mb-2 text-xl text-cacao-900">Notificacoes push</h2>
+          <p className="mb-4 text-sm text-cacao-700">Receba avisos quando o status do seu pedido mudar.</p>
+
+          {push.error ? <p className="mb-3 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{push.error}</p> : null}
+
+          <button
+            type="button"
+            onClick={() => (push.isSubscribed ? push.unsubscribe() : push.subscribe())}
+            disabled={push.isLoading}
+            className="rounded-full bg-cacao-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {push.isLoading ? 'Aguarde...' : push.isSubscribed ? 'Desativar notificacoes' : 'Ativar notificacoes'}
+          </button>
+        </section>
+      ) : null}
     </main>
   )
 }

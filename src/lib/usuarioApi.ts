@@ -19,6 +19,14 @@ export async function listUsuarios(token: string): Promise<UsuarioResumo[]> {
   return requestApi<UsuarioResumo[]>('/usuarios', { token })
 }
 
+export async function updateUsuarioRole(id: number, id_tipo_usuario: 1 | 2, token: string): Promise<UsuarioResumo> {
+  return requestApi<UsuarioResumo>(`/usuarios/${id}/role`, {
+    method: 'PUT',
+    token,
+    body: { id_tipo_usuario },
+  })
+}
+
 export async function listUsuariosByIds(ids: number[], token: string): Promise<UsuarioResumo[]> {
   if (ids.length === 0) {
     return []

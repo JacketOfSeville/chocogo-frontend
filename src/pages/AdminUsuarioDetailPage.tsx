@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getAdminSession } from '../lib/authStorage'
-import { getUsuarioById, type UsuarioDetalhe } from '../lib/usuarioApi'
+import { getUsuarioById, updateUsuarioRole, type UsuarioDetalhe } from '../lib/usuarioApi'
 
 const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
 
@@ -66,6 +66,7 @@ export function AdminUsuarioDetailPage() {
 
   const [usuario, setUsuario] = useState<UsuarioDetalhe | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isUpdatingRole, setIsUpdatingRole] = useState(false)
   const [error, setError] = useState('')
 
   const accessToken = session?.accessToken
@@ -120,6 +121,32 @@ export function AdminUsuarioDetailPage() {
     return <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Usuário inválido.</p>
   }
 
+  async function onToggleAdmin() {
+    if (!usuario || !accessToken || usuario.id === session.user.id) {
+      return
+    }
+
+    const nextRoleId = usuario.id_tipo_usuario === 2 ? 1 : 2
+    const nextRoleLabel = nextRoleId === 2 ? 'administrador' : 'usuario comum'
+
+    if (!window.confirm(`Deseja alterar ${usuario.nome} para ${nextRoleLabel}?`)) {
+      return
+    }
+
+    setIsUpdatingRole(true)
+    setError('')
+
+    try {
+      const updated = await updateUsuarioRole(usuario.id, nextRoleId, accessToken)
+      setUsuario((previous) => (previous ? { ...previous, ...updated } : previous))
+    } catch (updateError) {
+      const message = updateError instanceof Error ? updateError.message : 'Falha ao alterar permissao do usuario.'
+      setError(message)
+    } finally {
+      setIsUpdatingRole(false)
+    }
+  }
+
   return (
     <section className="space-y-5">
       <header className="rounded-3xl border border-cacao-200/90 bg-white/80 p-6 shadow-card backdrop-blur-sm">
@@ -150,6 +177,26 @@ export function AdminUsuarioDetailPage() {
               <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${getRoleChipClass(usuario.id_tipo_usuario)}`}>
                 {getRoleLabel(usuario.id_tipo_usuario)}
               </span>
+            </div>
+            <div className="mt-4">
+              {usuario.id === session.user.id ? (
+                <p className="text-sm text-cacao-600">Voce nao pode remover sua propria permissao de administrador.</p>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => void onToggleAdmin()}
+                  disabled={isUpdatingRole}
+                  className={usuario.id_tipo_usuario === 2
+                    ? 'rounded-full border border-amber-300 px-4 py-2 text-sm font-semibold text-amber-800 transition hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-60'
+                    : 'rounded-full bg-cacao-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60'}
+                >
+                  {isUpdatingRole
+                    ? 'Atualizando...'
+                    : usuario.id_tipo_usuario === 2
+                      ? 'Remover permissao de admin'
+                      : 'Tornar administrador'}
+                </button>
+              )}
             </div>
             <dl className="mt-4 grid gap-3 text-sm text-cacao-800 sm:grid-cols-2">
               <div>

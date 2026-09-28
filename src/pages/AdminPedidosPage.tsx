@@ -69,6 +69,9 @@ export function AdminPedidosPage() {
   const session = getAdminSession()
   const [pedidos, setPedidos] = useState<Pedido[]>([])
   const [clientesById, setClientesById] = useState<Record<number, string>>({})
+  const [searchTerm, setSearchTerm] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [deliveryFilter, setDeliveryFilter] = useState('all')
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -83,6 +86,21 @@ export function AdminPedidosPage() {
       }),
     [pedidos],
   )
+
+  const filteredPedidos = useMemo(() => {
+    const normalizedSearch = searchTerm.trim().toLocaleLowerCase('pt-BR')
+
+    return orderedPedidos.filter((pedido) => {
+      const matchesSearch =
+        normalizedSearch.length === 0 ||
+        [String(pedido.id), clientesById[pedido.id_usuario] ?? '', pedido.meio_pagamento]
+          .some((value) => value.toLocaleLowerCase('pt-BR').includes(normalizedSearch))
+      const matchesStatus = statusFilter === 'all' || pedido.id_status_pedido === Number(statusFilter)
+      const matchesDelivery = deliveryFilter === 'all' || pedido.id_tipo_entrega === Number(deliveryFilter)
+
+      return matchesSearch && matchesStatus && matchesDelivery
+    })
+  }, [clientesById, deliveryFilter, orderedPedidos, searchTerm, statusFilter])
 
   useEffect(() => {
     if (!accessToken) {
@@ -153,17 +171,71 @@ export function AdminPedidosPage() {
           </div>
 
           <p className="rounded-full bg-cacao-100 px-4 py-2 text-sm font-semibold text-cacao-800">
-            {orderedPedidos.length} pedido(s)
+            {filteredPedidos.length} de {orderedPedidos.length} pedido(s)
           </p>
         </div>
       </header>
 
       {error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 
+      <section className="grid gap-3 rounded-2xl border border-cacao-200 bg-white p-4 shadow-card sm:grid-cols-2 lg:grid-cols-[minmax(220px,1fr)_200px_200px_auto]">
+        <label className="block">
+          <span className="mb-1 block text-sm font-medium text-cacao-700">Buscar pedido</span>
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="Numero, cliente ou pagamento"
+            className="w-full rounded-xl border border-cacao-200 bg-white px-3 py-2 text-sm text-cacao-900 outline-none ring-cacao-600/50 transition focus:ring"
+          />
+        </label>
+
+        <label className="block">
+          <span className="mb-1 block text-sm font-medium text-cacao-700">Situacao</span>
+          <select
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value)}
+            className="w-full rounded-xl border border-cacao-200 bg-white px-3 py-2 text-sm text-cacao-900 outline-none ring-cacao-600/50 transition focus:ring"
+          >
+            <option value="all">Todas</option>
+            {Object.entries(ORDER_STATUS_LABELS).map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
+          </select>
+        </label>
+
+        <label className="block">
+          <span className="mb-1 block text-sm font-medium text-cacao-700">Entrega</span>
+          <select
+            value={deliveryFilter}
+            onChange={(event) => setDeliveryFilter(event.target.value)}
+            className="w-full rounded-xl border border-cacao-200 bg-white px-3 py-2 text-sm text-cacao-900 outline-none ring-cacao-600/50 transition focus:ring"
+          >
+            <option value="all">Todos</option>
+            {Object.entries(DELIVERY_TYPE_LABELS).map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
+          </select>
+        </label>
+
+        <button
+          type="button"
+          onClick={() => {
+            setSearchTerm('')
+            setStatusFilter('all')
+            setDeliveryFilter('all')
+          }}
+          disabled={!searchTerm && statusFilter === 'all' && deliveryFilter === 'all'}
+          className="self-end rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Limpar
+        </button>
+      </section>
+
       <section className="overflow-hidden rounded-2xl border border-cacao-200 bg-white shadow-card">
         {isLoading ? (
           <p className="p-5 text-sm text-cacao-700">Carregando pedidos...</p>
-        ) : orderedPedidos.length === 0 ? (
+        ) : filteredPedidos.length === 0 ? (
           <p className="p-5 text-sm text-cacao-700">Nenhum pedido encontrado.</p>
         ) : (
           <div className="overflow-x-auto">
@@ -181,7 +253,7 @@ export function AdminPedidosPage() {
                 </tr>
               </thead>
               <tbody>
-                {orderedPedidos.map((pedido) => (
+                {filteredPedidos.map((pedido) => (
                   <tr key={pedido.id} className="border-t border-cacao-100">
                     <td className="px-4 py-3 text-cacao-900">#{pedido.id}</td>
                     <td className="px-4 py-3 text-cacao-700">{clientesById[pedido.id_usuario] ?? 'Cliente desconhecido'}</td>

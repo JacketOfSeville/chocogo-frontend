@@ -1,4 +1,4 @@
-const SW_VERSION = 'v2'
+const SW_VERSION = 'v3'
 const APP_SHELL_CACHE = `app-shell-${SW_VERSION}`
 const STATIC_CACHE = `static-${SW_VERSION}`
 const CATALOG_API_CACHE = `catalog-api-${SW_VERSION}`
@@ -38,6 +38,50 @@ self.addEventListener('activate', (event) => {
         ),
       )
       .then(() => self.clients.claim()),
+  )
+})
+
+self.addEventListener('push', (event) => {
+  let payload = { title: 'ChocoGo', body: 'Voce tem uma nova notificacao.', url: '/' }
+
+  if (event.data) {
+    try {
+      payload = { ...payload, ...event.data.json() }
+    } catch {
+      payload = { ...payload, body: event.data.text() }
+    }
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(payload.title, {
+      body: payload.body,
+      icon: '/pwa/icon-192.png',
+      badge: '/pwa/icon-192.png',
+      data: { url: payload.url ?? '/' },
+    }),
+  )
+})
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+  const targetUrl = event.notification.data?.url ?? '/'
+
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        const clientUrl = new URL(client.url)
+
+        if (clientUrl.pathname === targetUrl && 'focus' in client) {
+          return client.focus()
+        }
+      }
+
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl)
+      }
+
+      return undefined
+    }),
   )
 })
 

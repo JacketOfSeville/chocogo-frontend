@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { clearAdminSession } from '../../lib/authStorage'
+import { clearAdminSession, getAdminSession } from '../../lib/authStorage'
+import { usePushNotifications } from '../../hooks/usePushNotifications'
 
 function sidebarLinkClass(isActive: boolean): string {
   return [
@@ -10,6 +11,8 @@ function sidebarLinkClass(isActive: boolean): string {
 
 export function AdminLayout() {
   const navigate = useNavigate()
+  const session = getAdminSession()
+  const push = usePushNotifications(session?.accessToken)
 
   function onLogout() {
     clearAdminSession()
@@ -40,6 +43,17 @@ export function AdminLayout() {
         </nav>
 
         <div className="mt-auto space-y-2 pt-6">
+          {push.isSupported ? (
+            <button
+              type="button"
+              onClick={() => (push.isSubscribed ? push.unsubscribe() : push.subscribe())}
+              disabled={push.isLoading}
+              className="w-full rounded-xl border border-cacao-200 px-3 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {push.isLoading ? 'Aguarde...' : push.isSubscribed ? 'Desativar notificacoes' : 'Ativar notificacoes de novos pedidos'}
+            </button>
+          ) : null}
+          {push.error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">{push.error}</p> : null}
           <NavLink to="/" className="block rounded-xl border border-cacao-200 px-3 py-2 text-sm font-semibold text-cacao-700 hover:bg-cacao-50">
             Ver catálogo
           </NavLink>
