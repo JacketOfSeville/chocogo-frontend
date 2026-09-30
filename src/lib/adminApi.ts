@@ -39,6 +39,7 @@ export interface ProdutoResponse {
 export interface CreateEstoqueInput {
   quantidade: number
   quantidade_min: number
+  valor_unitario?: number
 }
 
 export interface EstoqueResponse {
@@ -46,6 +47,8 @@ export interface EstoqueResponse {
   id_produto: number
   quantidade: number
   quantidade_min: number
+  valor_unitario: string | number | null
+  data_update: string
 }
 
 interface CreateImageUrlInput {

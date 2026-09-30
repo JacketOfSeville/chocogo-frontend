@@ -24,7 +24,7 @@ export function AdminLoginPage() {
       saveAdminSession(session)
       navigate(fromPath, { replace: true })
     } catch (submitError) {
-      const message = submitError instanceof Error ? submitError.message : 'Nao foi possivel autenticar.'
+      const message = submitError instanceof Error ? submitError.message : 'Não foi possível autenticar.'
       setError(message)
     } finally {
       setIsSubmitting(false)
@@ -73,7 +73,7 @@ export function AdminLoginPage() {
             </button>
 
             <Link to="/" className="text-sm font-medium text-cacao-700 underline underline-offset-4">
-              Voltar ao catalogo
+              Voltar ao catálogo
             </Link>
           </div>
         </form>

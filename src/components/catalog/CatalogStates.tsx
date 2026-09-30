@@ -24,7 +24,7 @@ export function CatalogEmptyState() {
   return (
     <section className="rounded-2xl border border-cacao-200 bg-white p-6 text-center shadow-card">
       <h2 className="mb-2 text-2xl text-cacao-900">Nenhum produto encontrado</h2>
-      <p className="text-cacao-700">A API nao retornou itens no momento. Tente novamente mais tarde.</p>
+      <p className="text-cacao-700">A API não retornou itens no momento. Tente novamente mais tarde.</p>
     </section>
   )
 }

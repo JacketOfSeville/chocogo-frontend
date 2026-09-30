@@ -41,7 +41,7 @@ function getDeliveryProgressLabel(pedido: Pedido): string {
     return 'Aguardando processamento'
   }
 
-  return 'Status indisponivel'
+  return 'Status indisponível'
 }
 
 export function UserPedidoDetailPage() {
@@ -84,7 +84,7 @@ export function UserPedidoDetailPage() {
         setProducts(catalogProducts)
       } catch (loadError) {
         if (!mounted) return
-        const message = loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar o pedido.'
+        const message = loadError instanceof Error ? loadError.message : 'Não foi possível carregar o pedido.'
         setError(message)
       } finally {
         if (mounted) setIsLoading(false)
@@ -122,10 +122,10 @@ export function UserPedidoDetailPage() {
           <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
         ) : pedido ? (
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-            {/* Items */}
+            {/* Itens */}
             <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
               <h1 className="mb-1 text-3xl text-cacao-900">Pedido #{pedido.id}</h1>
-              <p className="mb-5 text-sm text-cacao-700">Itens incluidos neste pedido.</p>
+              <p className="mb-5 text-sm text-cacao-700">Itens incluídos neste pedido.</p>
 
               <div className="space-y-3">
                 {itens.map((item) => {
@@ -156,7 +156,7 @@ export function UserPedidoDetailPage() {
               </div>
             </section>
 
-            {/* Summary */}
+            {/* Resumo */}
             <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
               <h2 className="mb-4 text-2xl text-cacao-900">Resumo</h2>
 

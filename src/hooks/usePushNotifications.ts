@@ -22,7 +22,7 @@ async function saveSubscriptionForUser(subscription: PushSubscription, accessTok
   const keys = subscription.toJSON().keys
 
   if (!keys?.p256dh || !keys.auth) {
-    throw new Error('Falha ao gerar credenciais de notificacao.')
+    throw new Error('Falha ao gerar credenciais de notificação.')
   }
 
   await subscribeToPush(
@@ -89,7 +89,7 @@ export function usePushNotifications(accessToken?: string): UsePushNotifications
 
   const subscribe = useCallback(async () => {
     if (!isSupported || !accessToken) {
-      setError('Notificacoes push nao sao suportadas neste navegador.')
+      setError('As notificações push não são compatíveis com este navegador ou exigem que você entre na conta.')
       return
     }
 
@@ -100,7 +100,7 @@ export function usePushNotifications(accessToken?: string): UsePushNotifications
       const permission = await Notification.requestPermission()
 
       if (permission !== 'granted') {
-        throw new Error('Permissao de notificacao negada.')
+        throw new Error('Permissão de notificação negada.')
       }
 
       const publicKey = await getPushPublicKey()
@@ -115,7 +115,7 @@ export function usePushNotifications(accessToken?: string): UsePushNotifications
 
       setIsSubscribed(true)
     } catch (subscribeError) {
-      const message = subscribeError instanceof Error ? subscribeError.message : 'Nao foi possivel ativar as notificacoes.'
+      const message = subscribeError instanceof Error ? subscribeError.message : 'Não foi possível ativar as notificações.'
       setError(message)
     } finally {
       setIsLoading(false)
@@ -141,7 +141,7 @@ export function usePushNotifications(accessToken?: string): UsePushNotifications
 
       setIsSubscribed(false)
     } catch (unsubscribeError) {
-      const message = unsubscribeError instanceof Error ? unsubscribeError.message : 'Nao foi possivel desativar as notificacoes.'
+      const message = unsubscribeError instanceof Error ? unsubscribeError.message : 'Não foi possível desativar as notificações.'
       setError(message)
     } finally {
       setIsLoading(false)

@@ -36,7 +36,7 @@ export function RegisterPage() {
       saveSession(session)
       navigate('/', { replace: true })
     } catch (submitError) {
-      const message = submitError instanceof Error ? submitError.message : 'Nao foi possivel criar a conta.'
+      const message = submitError instanceof Error ? submitError.message : 'Não foi possível criar a conta.'
       setError(message)
     } finally {
       setIsSubmitting(false)
@@ -49,7 +49,7 @@ export function RegisterPage() {
       <section className="mx-auto w-full max-w-xl rounded-3xl border border-cacao-200 bg-white p-6 shadow-card sm:p-8">
         <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">ChocoGo</p>
         <h1 className="mb-2 text-3xl text-cacao-900">Criar conta</h1>
-        <p className="mb-6 text-cacao-700">Cadastre-se para manter uma sessao e facilitar suas proximas compras.</p>
+        <p className="mb-6 text-cacao-700">Cadastre-se para manter sua sessão e facilitar as próximas compras.</p>
 
         <form className="space-y-4" onSubmit={onSubmit}>
           <label className="block">
@@ -98,7 +98,7 @@ export function RegisterPage() {
             </button>
 
             <Link to="/login" className="text-sm font-medium text-cacao-700 underline underline-offset-4">
-              Ja tenho conta
+              Já tenho conta
             </Link>
 
             <Link to="/" className="text-sm font-medium text-cacao-700 underline underline-offset-4">

@@ -11,7 +11,7 @@ const STATUS_LABELS: Record<number, string> = {
   1: 'Recebido',
   2: 'Em preparo',
   3: 'Em rota',
-  4: 'Concluido',
+  4: 'Concluído',
   5: 'Cancelado',
 }
 
@@ -59,11 +59,11 @@ export function UserPedidosPage() {
 
         if (!mounted) return
 
-        // Backend filtra para o usuario
+        // A API já filtra os pedidos pelo usuário autenticado.
         setPedidos([...result].reverse())
       } catch (loadError) {
         if (!mounted) return
-        const message = loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar os pedidos.'
+        const message = loadError instanceof Error ? loadError.message : 'Não foi possível carregar os pedidos.'
         setError(message)
       } finally {
         if (mounted) setIsLoading(false)
@@ -93,12 +93,12 @@ export function UserPedidosPage() {
       <section className="mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-8">
         <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
           <h1 className="mb-2 text-3xl text-cacao-900">Meus pedidos</h1>
-          <p className="mb-5 text-sm text-cacao-700">Historico dos seus pedidos realizados.</p>
+          <p className="mb-5 text-sm text-cacao-700">Histórico dos seus pedidos.</p>
 
           {isLoading ? <p className="text-sm text-cacao-700">Carregando pedidos...</p> : null}
 
           {!isLoading && pedidos.length === 0 ? (
-            <p className="text-sm text-cacao-700">Voce ainda nao realizou nenhum pedido.</p>
+            <p className="text-sm text-cacao-700">Você ainda não realizou nenhum pedido.</p>
           ) : null}
 
           {!isLoading && pedidos.length > 0 ? (

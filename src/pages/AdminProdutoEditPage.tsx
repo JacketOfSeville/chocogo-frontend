@@ -280,7 +280,8 @@ export function AdminProdutoEditPage() {
     event.preventDefault()
 
     if (!accessToken || !Number.isInteger(produtoId) || produtoId <= 0) {
-      setError('Produto invalido.')
+      setError('Produto inválido.')
+        setError('Produto inválido.')
       return
     }
 
@@ -407,7 +408,7 @@ export function AdminProdutoEditPage() {
   }
 
   if (!Number.isInteger(produtoId) || produtoId <= 0) {
-    return <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Produto invalido.</p>
+    return <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Produto inválido.</p>
   }
 
   return (
@@ -417,6 +418,7 @@ export function AdminProdutoEditPage() {
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Produtos</p>
             <h2 className="text-3xl text-cacao-900">Editar produto</h2>
+            <p className="mt-1 text-sm text-cacao-700">Atualize os dados, o estoque, as categorias ou as imagens.</p>
           </div>
 
           <button
@@ -424,17 +426,35 @@ export function AdminProdutoEditPage() {
             onClick={() => navigate('/admin/produtos')}
             className="rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
           >
-            Voltar para lista
+            Voltar para a lista
           </button>
         </div>
       </header>
+
+      <nav aria-label="Seções do produto" className="grid grid-cols-2 gap-2 rounded-2xl border border-cacao-200 bg-white p-3 shadow-card sm:grid-cols-4">
+        {[
+          ['dados-produto', '1. Dados básicos'],
+          ['estoque-produto', '2. Estoque'],
+          ['categorias-produto', '3. Categorias'],
+          ['imagens-produto', '4. Imagens'],
+        ].map(([target, label]) => (
+          <a
+            key={target}
+            href={`#${target}`}
+            className="rounded-xl px-3 py-2 text-center text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
 
       {isLoading ? (
         <p className="rounded-xl border border-cacao-200 bg-white px-4 py-3 text-sm text-cacao-700">Carregando...</p>
       ) : (
         <form className="grid gap-6" onSubmit={onSubmit}>
-          <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-            <h3 className="mb-4 text-2xl text-cacao-900">Dados do produto</h3>
+          <section id="dados-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+            <h3 className="text-xl text-cacao-900">Dados básicos</h3>
+            <p className="mb-4 mt-1 text-sm text-cacao-600">Nome, identificação, peso, preço e disponibilidade.</p>
 
             <div className="grid gap-4 md:grid-cols-2">
               <label className="block">
@@ -495,8 +515,9 @@ export function AdminProdutoEditPage() {
             </label>
           </section>
 
-          <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-            <h3 className="mb-4 text-2xl text-cacao-900">Estoque</h3>
+          <section id="estoque-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+            <h3 className="text-xl text-cacao-900">Estoque</h3>
+            <p className="mb-4 mt-1 text-sm text-cacao-600">Saldo atual e quantidade mínima para reposição.</p>
 
             <div className="grid gap-4 md:grid-cols-2">
               <label className="block">
@@ -512,7 +533,7 @@ export function AdminProdutoEditPage() {
               </label>
 
               <label className="block">
-                <span className="mb-1 block text-sm font-medium text-cacao-700">Quantidade minima</span>
+                <span className="mb-1 block text-sm font-medium text-cacao-700">Quantidade mínima</span>
                 <input
                   className="w-full rounded-xl border border-cacao-200 px-3 py-2 outline-none ring-cacao-600/50 transition focus:ring"
                   type="number"
@@ -527,8 +548,9 @@ export function AdminProdutoEditPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-            <h3 className="mb-4 text-2xl text-cacao-900">Categorias</h3>
+          <section id="categorias-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+            <h3 className="text-xl text-cacao-900">Categorias</h3>
+            <p className="mb-4 mt-1 text-sm text-cacao-600">Selecione as categorias em que o produto será exibido.</p>
 
             {categorias.length === 0 ? (
               <p className="text-sm text-cacao-700">Nenhuma categoria cadastrada.</p>
@@ -548,12 +570,13 @@ export function AdminProdutoEditPage() {
             )}
           </section>
 
-          <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-            <h3 className="mb-4 text-2xl text-cacao-900">Imagens</h3>
+          <section id="imagens-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+            <h3 className="text-xl text-cacao-900">Imagens do produto</h3>
+            <p className="mb-5 mt-1 text-sm text-cacao-600">Gerencie as imagens existentes ou adicione novas por URL e arquivo.</p>
 
             <div className="space-y-6">
               <div>
-                <h4 className="mb-3 text-lg font-semibold text-cacao-900">Imagens cadastradas</h4>
+                      <h4 className="mb-3 text-base font-semibold text-cacao-900">Imagens cadastradas</h4>
 
                 {existingImages.length === 0 ? (
                   <p className="text-sm text-cacao-700">Nenhuma imagem cadastrada.</p>
@@ -565,7 +588,7 @@ export function AdminProdutoEditPage() {
                         <div className="space-y-2 p-3 text-sm text-cacao-700">
                           <p className="truncate">{image.url}</p>
                           <p>Ordem: {image.ordem}</p>
-                          <p>{image.principal ? 'Principal' : 'Secundaria'}</p>
+                            <p>{image.principal ? 'Principal' : 'Secundária'}</p>
                           <button
                             type="button"
                             onClick={() => onDeleteExistingImage(image.id)}
@@ -583,7 +606,7 @@ export function AdminProdutoEditPage() {
 
               <div>
                 <div className="mb-4 flex items-center justify-between">
-                  <h4 className="text-lg font-semibold text-cacao-900">Adicionar por URL</h4>
+                  <h4 className="text-base font-semibold text-cacao-900">Adicionar por URL</h4>
                   <button
                     type="button"
                     onClick={addImageUrlRow}
@@ -599,6 +622,7 @@ export function AdminProdutoEditPage() {
                       <input
                         className="w-full rounded-xl border border-cacao-200 px-3 py-2 outline-none ring-cacao-600/50 transition focus:ring"
                         placeholder="https://..."
+                        aria-label="URL da imagem"
                         value={image.url}
                         onChange={(event) => onImageUrlChange(image.id, 'url', event.target.value)}
                       />
@@ -607,6 +631,7 @@ export function AdminProdutoEditPage() {
                         className="w-full rounded-xl border border-cacao-200 px-3 py-2 outline-none ring-cacao-600/50 transition focus:ring"
                         type="number"
                         min={0}
+                        aria-label="Ordem da imagem"
                         value={image.ordem}
                         onChange={(event) => onImageUrlChange(image.id, 'ordem', Number(event.target.value))}
                       />
@@ -691,13 +716,15 @@ export function AdminProdutoEditPage() {
           {error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
           {success ? <p className="rounded-xl bg-mint-100 px-3 py-2 text-sm text-mint-700">{success}</p> : null}
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="sticky bottom-3 z-20 flex flex-col gap-3 rounded-2xl border border-cacao-200 bg-white/95 p-4 shadow-card backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-cacao-600">As alterações só serão aplicadas após salvar.</p>
+            <div className="flex flex-wrap items-center gap-3">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-full bg-cacao-700 px-6 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-full bg-cacao-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? 'Salvando...' : 'Salvar alteracoes'}
+              {isSubmitting ? 'Salvando...' : 'Salvar alterações'}
             </button>
 
             <Link
@@ -706,6 +733,7 @@ export function AdminProdutoEditPage() {
             >
               Cancelar
             </Link>
+            </div>
           </div>
         </form>
       )}

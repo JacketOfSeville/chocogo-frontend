@@ -19,7 +19,7 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
   const safeImageIndex = images.length > 0 ? currentImageIndex % images.length : 0
   const currentImageUrl = images[safeImageIndex] ?? product.imageUrl
 
-  // out if estoque is undefined or 0
+  // Sem estoque quando não há registro ou a quantidade é zero.
   const outOfStock = product.estoque === undefined || product.estoque === 0
 
   function showPreviousImage() {
@@ -74,7 +74,7 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
           <img className="h-full w-full object-cover" src={currentImageUrl} alt={product.nome} loading="lazy" />
         ) : (
           <div className="flex h-full items-center justify-center bg-gradient-to-br from-cacao-100 to-cacao-200 px-4 text-center text-sm font-medium text-cacao-700">
-            Imagem indisponivel
+            Imagem indisponível
           </div>
         )}
 
@@ -98,7 +98,7 @@ export function ProductCard({ product, onSelect }: ProductCardProps) {
                 event.stopPropagation()
                 showNextImage()
               }}
-              aria-label="Proxima imagem"
+              aria-label="Próxima imagem"
               className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-2 py-1 text-lg leading-none text-cacao-800 shadow transition hover:bg-white"
               disabled={outOfStock}
             >

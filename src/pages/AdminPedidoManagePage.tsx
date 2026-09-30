@@ -17,7 +17,7 @@ const ORDER_STATUS_LABELS: Record<number, string> = {
   1: 'Recebido',
   2: 'Em preparo',
   3: 'Em rota',
-  4: 'Concluido',
+  4: 'Concluído',
   5: 'Cancelado',
 }
 
@@ -183,11 +183,11 @@ export function AdminPedidoManagePage() {
       return
     }
 
-    await applyStatus(nextStatus, `Pedido avancou para ${getOrderStatusLabel(nextStatus)}.`)
+    await applyStatus(nextStatus, `O pedido avançou para ${getOrderStatusLabel(nextStatus)}.`)
   }
 
   async function onMarkAsDone() {
-    await applyStatus(4, 'Pedido marcado como concluido.')
+    await applyStatus(4, 'Pedido marcado como concluído.')
   }
 
   async function onCancelPedido() {
@@ -222,7 +222,7 @@ export function AdminPedidoManagePage() {
         accessToken,
       )
       setPedido(updated)
-      setSuccess(updated.pronto_retirada ? 'Pedido marcado como pronto para retirada.' : 'Flag de retirada pronta removida.')
+      setSuccess(updated.pronto_retirada ? 'Pedido marcado como pronto para retirada.' : 'Sinalização de retirada pronta removida.')
     } catch (saveError) {
       const message = saveError instanceof Error ? saveError.message : 'Falha ao atualizar retirada.'
       setError(message)
@@ -264,7 +264,7 @@ export function AdminPedidoManagePage() {
   }
 
   if (!Number.isInteger(pedidoId) || pedidoId <= 0) {
-    return <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Pedido invalido.</p>
+    return <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">Pedido inválido.</p>
   }
 
   return (

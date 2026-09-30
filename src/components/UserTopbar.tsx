@@ -12,12 +12,12 @@ export function UserTopbar({ session, onLogout }: UserTopbarProps) {
 
   const navLinks = session
     ? [
-        { to: '/', label: 'Catalogo' },
+        { to: '/', label: 'Catálogo' },
         { to: '/minha-conta', label: 'Minha conta' },
         ...(session.user.roleId === 1 ? [{ to: '/carrinho', label: 'Carrinho' }] : []),
         { to: '/meus-pedidos', label: 'Pedidos' },
         { to: '/meus-enderecos', label: 'Endereços' },
-        ...(session.user.roleId === 2 ? [{ to: '/admin/produtos', label: 'Area Admin' }] : []),
+        ...(session.user.roleId === 2 ? [{ to: '/admin/produtos', label: 'Área administrativa' }] : []),
       ]
     : [
         { to: '/login', label: 'Entrar' },
@@ -33,7 +33,7 @@ export function UserTopbar({ session, onLogout }: UserTopbarProps) {
 
         {/* Desktop nav */}
         <div className="hidden sm:flex flex-wrap items-center justify-end gap-2">
-          {session ? <span className="px-2 text-sm font-medium text-cacao-700">Ola, {session.user.nome}</span> : null}
+          {session ? <span className="px-2 text-sm font-medium text-cacao-700">Olá, {session.user.nome}</span> : null}
           {navLinks.map((link) => (
             <Link
               key={link.to}
@@ -74,7 +74,7 @@ export function UserTopbar({ session, onLogout }: UserTopbarProps) {
           {mobileMenuOpen && (
             <div className="absolute right-4 top-14 z-50 min-w-[160px] rounded-xl border border-cacao-200 bg-white shadow-lg">
               {session ? (
-                <span className="block px-4 py-2 text-left text-sm font-medium text-cacao-700">Ola, {session.user.nome}</span>
+                <span className="block px-4 py-2 text-left text-sm font-medium text-cacao-700">Olá, {session.user.nome}</span>
               ) : null}
               {navLinks.map((link) => (
                 <Link

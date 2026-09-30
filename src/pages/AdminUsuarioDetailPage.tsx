@@ -9,7 +9,7 @@ const ORDER_STATUS_LABELS: Record<number, string> = {
   1: 'Recebido',
   2: 'Em preparo',
   3: 'Em rota',
-  4: 'Concluido',
+  4: 'Concluído',
   5: 'Cancelado',
 }
 
@@ -42,7 +42,7 @@ function getRoleLabel(roleId?: number): string {
   }
 
   if (roleId === 1) {
-    return 'Usuario'
+    return 'Usuário'
   }
 
   return 'Desconhecido'
@@ -97,7 +97,7 @@ export function AdminUsuarioDetailPage() {
           return
         }
 
-        const message = loadError instanceof Error ? loadError.message : 'Falha ao carregar usuario.'
+        const message = loadError instanceof Error ? loadError.message : 'Falha ao carregar usuário.'
         setError(message)
       } finally {
         if (mounted) {
@@ -127,7 +127,7 @@ export function AdminUsuarioDetailPage() {
     }
 
     const nextRoleId = usuario.id_tipo_usuario === 2 ? 1 : 2
-    const nextRoleLabel = nextRoleId === 2 ? 'administrador' : 'usuario comum'
+    const nextRoleLabel = nextRoleId === 2 ? 'administrador' : 'usuário comum'
 
     if (!window.confirm(`Deseja alterar ${usuario.nome} para ${nextRoleLabel}?`)) {
       return
@@ -140,7 +140,7 @@ export function AdminUsuarioDetailPage() {
       const updated = await updateUsuarioRole(usuario.id, nextRoleId, accessToken)
       setUsuario((previous) => (previous ? { ...previous, ...updated } : previous))
     } catch (updateError) {
-      const message = updateError instanceof Error ? updateError.message : 'Falha ao alterar permissao do usuario.'
+      const message = updateError instanceof Error ? updateError.message : 'Falha ao alterar a permissão do usuário.'
       setError(message)
     } finally {
       setIsUpdatingRole(false)
@@ -180,7 +180,7 @@ export function AdminUsuarioDetailPage() {
             </div>
             <div className="mt-4">
               {usuario.id === session.user.id ? (
-                <p className="text-sm text-cacao-600">Voce nao pode remover sua propria permissao de administrador.</p>
+                <p className="text-sm text-cacao-600">Você não pode remover sua própria permissão de administrador.</p>
               ) : (
                 <button
                   type="button"
@@ -193,7 +193,7 @@ export function AdminUsuarioDetailPage() {
                   {isUpdatingRole
                     ? 'Atualizando...'
                     : usuario.id_tipo_usuario === 2
-                      ? 'Remover permissao de admin'
+                      ? 'Remover permissão de admin'
                       : 'Tornar administrador'}
                 </button>
               )}

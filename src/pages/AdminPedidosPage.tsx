@@ -16,7 +16,7 @@ const ORDER_STATUS_LABELS: Record<number, string> = {
   1: 'Recebido',
   2: 'Em preparo',
   3: 'Em rota',
-  4: 'Concluido',
+  4: 'Concluído',
   5: 'Cancelado',
 }
 
@@ -165,13 +165,13 @@ export function AdminPedidosPage() {
       <header className="rounded-3xl border border-cacao-200/90 bg-white/80 p-6 shadow-card backdrop-blur-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Modulo</p>
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Módulo</p>
             <h2 className="text-3xl text-cacao-900">Pedidos</h2>
             <p className="mt-1 text-sm text-cacao-700">Acompanhe todos os pedidos e abra o painel de gerenciamento.</p>
           </div>
 
           <p className="rounded-full bg-cacao-100 px-4 py-2 text-sm font-semibold text-cacao-800">
-            {filteredPedidos.length} de {orderedPedidos.length} pedido(s)
+            {filteredPedidos.length} de {orderedPedidos.length} {orderedPedidos.length === 1 ? 'pedido' : 'pedidos'}
           </p>
         </div>
       </header>
@@ -185,13 +185,13 @@ export function AdminPedidosPage() {
             type="search"
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
-            placeholder="Numero, cliente ou pagamento"
+            placeholder="Número, cliente ou pagamento"
             className="w-full rounded-xl border border-cacao-200 bg-white px-3 py-2 text-sm text-cacao-900 outline-none ring-cacao-600/50 transition focus:ring"
           />
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm font-medium text-cacao-700">Situacao</span>
+          <span className="mb-1 block text-sm font-medium text-cacao-700">Situação</span>
           <select
             value={statusFilter}
             onChange={(event) => setStatusFilter(event.target.value)}
@@ -248,8 +248,8 @@ export function AdminPedidosPage() {
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Entrega</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Pagamento</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Total</th>
-                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Situacao</th>
-                  <th className="px-4 py-3 text-right font-semibold text-cacao-700">Acao</th>
+                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Situação</th>
+                  <th className="px-4 py-3 text-right font-semibold text-cacao-700">Ação</th>
                 </tr>
               </thead>
               <tbody>

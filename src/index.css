@@ -63,3 +63,62 @@
     @apply min-w-0 md:px-6 md:py-6;
   }
 }
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    width: 100%;
+    background: #fff !important;
+  }
+
+  body,
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .admin-sidebar,
+  [data-print-hide] {
+    display: none !important;
+  }
+
+  .admin-shell {
+    display: block !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+  }
+
+  .admin-content {
+    padding: 0 !important;
+  }
+
+  .admin-report-page {
+    max-width: none !important;
+    gap: 12px !important;
+  }
+
+  .admin-report-page .report-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .admin-report-page .report-charts {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .admin-report-page article,
+  .admin-report-page header {
+    break-inside: avoid;
+    border-color: #d8c8bb !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  .admin-report-page .recharts-responsive-container {
+    min-height: 220px;
+  }
+}

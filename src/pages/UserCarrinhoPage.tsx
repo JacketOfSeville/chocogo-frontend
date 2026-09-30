@@ -66,7 +66,7 @@ export function UserCarrinhoPage() {
   const valorFrete = entregaMode === 'entrega' ? 10 : 0
   const valorTotal = valorProdutos + valorFrete
 
-  // Load API on token change, always fetch fresh data from server
+  // Recarrega os dados do servidor sempre que a sessão muda.
   useEffect(() => {
     if (!accessToken || userId === undefined) {
       return
@@ -104,7 +104,7 @@ export function UserCarrinhoPage() {
           return
         }
 
-        const message = loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar o carrinho.'
+        const message = loadError instanceof Error ? loadError.message : 'Não foi possível carregar o carrinho.'
         setError(message)
       } finally {
         if (mounted) {
@@ -120,7 +120,7 @@ export function UserCarrinhoPage() {
     }
   }, [accessToken, userId])
 
-  // Persist to localStorage
+  // Mantém o carrinho salvo no armazenamento local.
   useEffect(() => {
     if (carrinhoId) {
       persistCarrinhoId(carrinhoId)
@@ -142,7 +142,7 @@ export function UserCarrinhoPage() {
 
   async function onIncreaseQuantidade(item: CarrinhoItem) {
     if (!accessToken) {
-      setError('Sessao invalida. Faca login novamente.')
+      setError('Sessão inválida. Faça login novamente.')
       return
     }
 
@@ -154,14 +154,14 @@ export function UserCarrinhoPage() {
       const updated = await updateCarrinhoItem(item.id, { quantidade: item.quantidade + 1 }, token)
       setItems((previous) => previous.map((current) => (current.id === updated.id ? updated : current)))
     } catch (updateError) {
-      const message = updateError instanceof Error ? updateError.message : 'Nao foi possivel atualizar a quantidade.'
+      const message = updateError instanceof Error ? updateError.message : 'Não foi possível atualizar a quantidade.'
       setError(message)
     }
   }
 
   async function onDecreaseQuantidade(item: CarrinhoItem) {
     if (!accessToken) {
-      setError('Sessao invalida. Faca login novamente.')
+      setError('Sessão inválida. Faça login novamente.')
       return
     }
 
@@ -179,14 +179,14 @@ export function UserCarrinhoPage() {
       const updated = await updateCarrinhoItem(item.id, { quantidade: item.quantidade - 1 }, token)
       setItems((previous) => previous.map((current) => (current.id === updated.id ? updated : current)))
     } catch (updateError) {
-      const message = updateError instanceof Error ? updateError.message : 'Nao foi possivel atualizar a quantidade.'
+      const message = updateError instanceof Error ? updateError.message : 'Não foi possível atualizar a quantidade.'
       setError(message)
     }
   }
 
   async function onRemoveItem(itemId: number) {
     if (!accessToken) {
-      setError('Sessao invalida. Faca login novamente.')
+      setError('Sessão inválida. Faça login novamente.')
       return
     }
 
@@ -198,19 +198,19 @@ export function UserCarrinhoPage() {
       await deleteCarrinhoItem(itemId, token)
       setItems((previous) => previous.filter((item) => item.id !== itemId))
     } catch (removeError) {
-      const message = removeError instanceof Error ? removeError.message : 'Nao foi possivel remover o item.'
+      const message = removeError instanceof Error ? removeError.message : 'Não foi possível remover o item.'
       setError(message)
     }
   }
 
   async function onCheckout() {
     if (!accessToken) {
-      setError('Sessao invalida. Faca login novamente.')
+      setError('Sessão inválida. Faça login novamente.')
       return
     }
 
     if (!carrinhoId) {
-      setError('Carrinho indisponivel no momento.')
+      setError('Carrinho indisponível no momento.')
       return
     }
 
@@ -220,7 +220,7 @@ export function UserCarrinhoPage() {
     }
 
     if (entregaMode === 'entrega' && !enderecoId) {
-      setError('Selecione um endereco para entrega.')
+      setError('Selecione um endereço para entrega.')
       return
     }
 
@@ -239,13 +239,13 @@ export function UserCarrinhoPage() {
 
     try {
       const result = await checkoutCarrinho(carrinhoId, checkoutPayload, token)
-      // Backend already deleted all carrinho_itens; clear client state and localStorage
+      // O backend já removeu os itens do carrinho durante a finalização.
       setItems([])
       clearPersistedCarrinho()
       notifyCartUpdated()
       navigate(`/meus-pedidos/${result.pedido.id}`)
     } catch (checkoutError) {
-      const message = checkoutError instanceof Error ? checkoutError.message : 'Nao foi possivel realizar o pedido.'
+      const message = checkoutError instanceof Error ? checkoutError.message : 'Não foi possível realizar o pedido.'
       setError(message)
     } finally {
       setIsSubmitting(false)
@@ -264,7 +264,7 @@ export function UserCarrinhoPage() {
 
             {isLoading ? <p className="text-sm text-cacao-700">Carregando carrinho...</p> : null}
 
-            {!isLoading && itemDetails.length === 0 ? <p className="text-sm text-cacao-700">Seu carrinho esta vazio.</p> : null}
+            {!isLoading && itemDetails.length === 0 ? <p className="text-sm text-cacao-700">Seu carrinho está vazio.</p> : null}
 
             {!isLoading && itemDetails.length > 0 ? (
               <div className="space-y-3">
@@ -329,8 +329,8 @@ export function UserCarrinhoPage() {
                 className="w-full rounded-xl border border-cacao-200 bg-white px-3 py-2 text-cacao-900 outline-none ring-cacao-600/50 transition focus:ring"
               >
                 <option value="PIX">PIX</option>
-                <option value="Cartao de Credito">Cartao de Credito</option>
-                <option value="Cartao de Debito">Cartao de Debito</option>
+                <option value="Cartao de Credito">Cartão de crédito</option>
+                <option value="Cartao de Debito">Cartão de débito</option>
                 <option value="Dinheiro">Dinheiro</option>
               </select>
             </label>
@@ -349,7 +349,7 @@ export function UserCarrinhoPage() {
 
             {entregaMode === 'entrega' ? (
               <label className="mb-4 block">
-                <span className="mb-1 block text-sm font-medium text-cacao-700">Endereco</span>
+                <span className="mb-1 block text-sm font-medium text-cacao-700">Endereço</span>
                 <select
                   value={enderecoId ?? ''}
                   onChange={(event) => setEnderecoId(event.target.value ? Number(event.target.value) : null)}
@@ -388,7 +388,7 @@ export function UserCarrinhoPage() {
               disabled={isSubmitting}
               className="w-full rounded-full bg-cacao-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? 'Processando...' : 'Realizar Pedido'}
+              {isSubmitting ? 'Processando...' : 'Realizar pedido'}
             </button>
 
             {/* <p className="mt-3 text-xs text-cacao-600">

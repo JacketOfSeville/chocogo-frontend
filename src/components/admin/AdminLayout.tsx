@@ -24,12 +24,15 @@ export function AdminLayout() {
       <aside className="admin-sidebar">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cacao-600">ChocoGo Admin</p>
-          <h1 className="mt-2 text-2xl text-cacao-900">Modulos</h1>
+          <h1 className="mt-2 text-2xl text-cacao-900">Módulos</h1>
         </div>
 
         <nav className="mt-6">
           <NavLink to="/admin/produtos" className={({ isActive }) => sidebarLinkClass(isActive)}>
             Produtos
+          </NavLink>
+          <NavLink to="/admin/estoque" className={({ isActive }) => sidebarLinkClass(isActive)}>
+            Estoque
           </NavLink>
           <NavLink to="/admin/categorias" className={({ isActive }) => sidebarLinkClass(isActive)}>
             Categorias
@@ -37,8 +40,11 @@ export function AdminLayout() {
           <NavLink to="/admin/pedidos" className={({ isActive }) => sidebarLinkClass(isActive)}>
             Pedidos
           </NavLink>
+          <NavLink to="/admin/relatorios" className={({ isActive }) => sidebarLinkClass(isActive)}>
+            Relatórios
+          </NavLink>
           <NavLink to="/admin/usuarios" className={({ isActive }) => sidebarLinkClass(isActive)}>
-            Usuarios
+            Usuários
           </NavLink>
         </nav>
 
@@ -50,11 +56,11 @@ export function AdminLayout() {
               disabled={push.isLoading}
               className="w-full rounded-xl border border-cacao-200 px-3 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {push.isLoading ? 'Aguarde...' : push.isSubscribed ? 'Desativar notificacoes' : 'Ativar notificacoes de novos pedidos'}
+              {push.isLoading ? 'Aguarde...' : push.isSubscribed ? 'Desativar notificações' : 'Ativar notificações de novos pedidos'}
             </button>
           ) : null}
           {push.error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">{push.error}</p> : null}
-          <NavLink to="/" className="block rounded-xl border border-cacao-200 px-3 py-2 text-sm font-semibold text-cacao-700 hover:bg-cacao-50">
+          <NavLink to="/" className="block rounded-xl border border-cacao-200 px-3 py-2 text-sm font-semibold text-cacao-700 text-center hover:bg-cacao-50">
             Ver catálogo
           </NavLink>
           <button

@@ -69,18 +69,14 @@ export function AdminProdutosPage() {
 
         setProdutos(list)
 
-        const mappedStock = new Map<number, { id: number; quantidade: number }>()
+        const mappedStock = new Map<number, number>()
         for (const item of estoques) {
-          const previous = mappedStock.get(item.id_produto)
-
-          if (!previous || item.id > previous.id) {
-            mappedStock.set(item.id_produto, { id: item.id, quantidade: item.quantidade })
-          }
+          mappedStock.set(item.id_produto, (mappedStock.get(item.id_produto) ?? 0) + item.quantidade)
         }
 
         const stockRecord: Record<number, number> = {}
-        for (const [idProduto, stock] of mappedStock.entries()) {
-          stockRecord[idProduto] = stock.quantidade
+        for (const [idProduto, quantity] of mappedStock.entries()) {
+          stockRecord[idProduto] = quantity
         }
 
         setEstoqueByProdutoId(stockRecord)
@@ -178,7 +174,7 @@ export function AdminProdutosPage() {
       <header className="rounded-3xl border border-cacao-200/90 bg-white/80 p-6 shadow-card backdrop-blur-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Modulo</p>
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Módulo</p>
             <h2 className="text-3xl text-cacao-900">Produtos</h2>
             <p className="mt-1 text-sm text-cacao-700">Gerencie os produtos cadastrados no sistema.</p>
           </div>
@@ -258,10 +254,10 @@ export function AdminProdutosPage() {
                 <tr>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Produto ({filteredProdutos.length})</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">SKU</th>
-                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Preco</th>
+                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Preço</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Estoque</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Ativo</th>
-                  <th className="px-4 py-3 text-right font-semibold text-cacao-700">Acoes</th>
+                  <th className="px-4 py-3 text-right font-semibold text-cacao-700">Ações</th>
                 </tr>
               </thead>
               <tbody>

@@ -114,7 +114,7 @@ export function AdminCategoriasPage() {
     const descricao = form.descricao?.trim()
 
     if (!nome) {
-      setError('Nome da categoria e obrigatorio.')
+      setError('O nome da categoria é obrigatório.')
       return
     }
 
@@ -179,7 +179,7 @@ export function AdminCategoriasPage() {
         resetForm()
       }
 
-      setSuccess('Categoria excluida com sucesso.')
+      setSuccess('Categoria excluída com sucesso.')
     } catch (deleteError) {
       const message = deleteError instanceof Error ? deleteError.message : 'Falha ao excluir categoria.'
       setError(message)
@@ -193,9 +193,9 @@ export function AdminCategoriasPage() {
       <header className="rounded-3xl border border-cacao-200/90 bg-white/80 p-6 shadow-card backdrop-blur-sm">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Modulo</p>
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Módulo</p>
             <h2 className="text-3xl text-cacao-900">Categorias</h2>
-            <p className="mt-1 text-sm text-cacao-700">Liste, cadastre, edite e exclua categorias do catalogo.</p>
+            <p className="mt-1 text-sm text-cacao-700">Liste, cadastre, edite e exclua categorias do catálogo.</p>
           </div>
           <button
             type="button"
@@ -222,8 +222,8 @@ export function AdminCategoriasPage() {
                   <tr>
                     <th className="px-4 py-3 text-left font-semibold text-cacao-700">ID</th>
                     <th className="px-4 py-3 text-left font-semibold text-cacao-700">Nome</th>
-                    <th className="px-4 py-3 text-left font-semibold text-cacao-700">Descricao</th>
-                    <th className="px-4 py-3 text-right font-semibold text-cacao-700">Acoes</th>
+                    <th className="px-4 py-3 text-left font-semibold text-cacao-700">Descrição</th>
+                    <th className="px-4 py-3 text-right font-semibold text-cacao-700">Ações</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -283,7 +283,7 @@ export function AdminCategoriasPage() {
                 type="button"
                 onClick={resetForm}
                 disabled={isSaving}
-                aria-label="Fechar formulario"
+                aria-label="Fechar formulário"
                 className="rounded-full border border-cacao-300 px-3 py-1 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50 disabled:opacity-60"
               >
                 Fechar
@@ -305,7 +305,7 @@ export function AdminCategoriasPage() {
               </label>
 
               <label className="mt-3 block">
-                <span className="mb-1 block text-sm font-medium text-cacao-700">Descricao (opcional)</span>
+                <span className="mb-1 block text-sm font-medium text-cacao-700">Descrição (opcional)</span>
                 <textarea
                   value={form.descricao ?? ''}
                   onChange={(event) => setForm((previous) => ({ ...previous, descricao: event.target.value }))}
@@ -321,7 +321,7 @@ export function AdminCategoriasPage() {
                   disabled={isSaving}
                   className="rounded-full bg-cacao-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {isSaving ? 'Salvando...' : editingId ? 'Salvar alteracoes' : 'Cadastrar categoria'}
+                  {isSaving ? 'Salvando...' : editingId ? 'Salvar alterações' : 'Cadastrar categoria'}
                 </button>
                 <button
                   type="button"

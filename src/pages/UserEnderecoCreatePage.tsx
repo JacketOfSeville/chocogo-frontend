@@ -37,7 +37,7 @@ export function UserEnderecoCreatePage() {
     event.preventDefault()
 
     if (!accessToken) {
-      setError('Sessao invalida. Faca login novamente.')
+      setError('Sessão inválida. Faça login novamente.')
       return
     }
 
@@ -55,7 +55,7 @@ export function UserEnderecoCreatePage() {
       await createEndereco(payload, token)
       navigate('/meus-enderecos', { replace: true })
     } catch (submitError) {
-      const message = submitError instanceof Error ? submitError.message : 'Nao foi possivel criar o endereco.'
+      const message = submitError instanceof Error ? submitError.message : 'Não foi possível criar o endereço.'
       setError(message)
     } finally {
       setIsSubmitting(false)
@@ -68,8 +68,8 @@ export function UserEnderecoCreatePage() {
 
       <section className="mx-auto w-full max-w-3xl px-4 sm:px-6 md:px-8">
         <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-          <h1 className="mb-2 text-3xl text-cacao-900">Novo endereco</h1>
-          <p className="mb-5 text-sm text-cacao-700">Cadastre um endereco para entrega.</p>
+          <h1 className="mb-2 text-3xl text-cacao-900">Novo endereço</h1>
+          <p className="mb-5 text-sm text-cacao-700">Cadastre um endereço para entrega.</p>
 
           <form className="space-y-3" onSubmit={onSubmit}>
             <label className="block">
@@ -84,7 +84,7 @@ export function UserEnderecoCreatePage() {
 
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-1 block text-sm font-medium text-cacao-700">Numero</span>
+                <span className="mb-1 block text-sm font-medium text-cacao-700">Número</span>
                 <input
                   className="w-full rounded-xl border border-cacao-200 px-3 py-2 outline-none ring-cacao-600/50 transition focus:ring"
                   value={form.numero}
@@ -141,7 +141,7 @@ export function UserEnderecoCreatePage() {
                 checked={Boolean(form.principal)}
                 onChange={(event) => setForm((previous) => ({ ...previous, principal: event.target.checked }))}
               />
-              Endereco principal
+              Endereço principal
             </label>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -150,7 +150,7 @@ export function UserEnderecoCreatePage() {
                 disabled={isSubmitting}
                 className="rounded-full bg-cacao-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSubmitting ? 'Salvando...' : 'Cadastrar endereco'}
+                {isSubmitting ? 'Salvando...' : 'Cadastrar endereço'}
               </button>
 
               <Link

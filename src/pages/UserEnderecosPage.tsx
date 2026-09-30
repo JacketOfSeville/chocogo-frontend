@@ -115,10 +115,10 @@ export function UserEnderecosPage() {
             </Link>
           </div>
 
-          {isLoading ? <p className="text-sm text-cacao-700">Carregando enderecos...</p> : null}
+          {isLoading ? <p className="text-sm text-cacao-700">Carregando endereços...</p> : null}
 
           {!isLoading && enderecos.length === 0 ? (
-            <p className="text-sm text-cacao-700">Voce ainda nao possui enderecos cadastrados.</p>
+            <p className="text-sm text-cacao-700">Você ainda não possui endereços cadastrados.</p>
           ) : null}
 
           {!isLoading && enderecos.length > 0 ? (

@@ -61,7 +61,7 @@ export function CatalogPage() {
       await addProdutoAoCarrinho(selectedProduct.id, modalQuantity, accessToken, session?.user.id)
       closeProductModal()
     } catch (addError) {
-      const message = addError instanceof Error ? addError.message : 'Nao foi possivel adicionar ao carrinho.'
+      const message = addError instanceof Error ? addError.message : 'Não foi possível adicionar ao carrinho.'
       setModalError(message)
       setIsAddingToCart(false)
     }
@@ -105,7 +105,7 @@ export function CatalogPage() {
 
       setStatus('success')
     } catch (loadError) {
-      const message = loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar o catalogo.'
+      const message = loadError instanceof Error ? loadError.message : 'Não foi possível carregar o catálogo.'
       setError(message)
       setStatus('error')
     }
@@ -135,7 +135,7 @@ export function CatalogPage() {
           return
         }
 
-        const message = loadError instanceof Error ? loadError.message : 'Nao foi possivel carregar o catalogo.'
+        const message = loadError instanceof Error ? loadError.message : 'Não foi possível carregar o catálogo.'
         setError(message)
         setStatus('error')
       }
@@ -153,9 +153,9 @@ export function CatalogPage() {
       <UserTopbar session={session} onLogout={onLogout} />
 
       <section className="catalog-header">
-        <h1 className="mb-3 text-3xl text-cacao-900 sm:text-4xl">Catalogo Principal</h1>
+        <h1 className="mb-3 text-3xl text-cacao-900 sm:text-4xl">Catálogo principal</h1>
         <p className="max-w-2xl text-sm text-cacao-700 sm:text-base">
-          Explore os produtos disponiveis.
+          Explore os produtos disponíveis.
         </p>
 
         <div className="mt-5 grid gap-3 md:grid-cols-[minmax(0,1fr)_260px]">
@@ -210,7 +210,7 @@ export function CatalogPage() {
               {selectedProduct.imageUrl ? (
                 <img src={selectedProduct.imageUrl} alt={selectedProduct.nome} className="h-60 w-full object-cover" />
               ) : (
-                <div className="flex h-60 items-center justify-center px-4 text-center text-sm font-medium text-cacao-700">Imagem indisponivel</div>
+                  <div className="flex h-60 items-center justify-center px-4 text-center text-sm font-medium text-cacao-700">Imagem indisponível</div>
               )}
             </div>
 

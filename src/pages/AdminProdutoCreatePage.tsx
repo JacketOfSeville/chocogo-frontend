@@ -76,7 +76,7 @@ export function AdminProdutoCreatePage() {
           return
         }
 
-        const message = requestError instanceof Error ? requestError.message : 'Falha ao carregar categorias.'
+        const message = requestError instanceof Error ? requestError.message : 'Falha ao carregar as categorias.'
         setError(message)
       } finally {
         if (mounted) {
@@ -161,7 +161,7 @@ export function AdminProdutoCreatePage() {
     event.preventDefault()
 
     if (!accessToken) {
-      setError('Sessao invalida. Faca login novamente.')
+      setError('Sessão inválida. Faça login novamente.')
       return
     }
 
@@ -227,7 +227,7 @@ export function AdminProdutoCreatePage() {
       setUploadFirstAsPrincipal(false)
       navigate('/admin/produtos')
     } catch (submitError) {
-      const message = submitError instanceof Error ? submitError.message : 'Falha ao criar produto.'
+      const message = submitError instanceof Error ? submitError.message : 'Falha ao criar o produto.'
       setError(message)
     } finally {
       setIsSubmitting(false)
@@ -241,20 +241,39 @@ export function AdminProdutoCreatePage() {
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Produtos</p>
             <h1 className="text-3xl text-cacao-900">Cadastro de produto</h1>
+            <p className="mt-1 text-sm text-cacao-700">Preencha as etapas para publicar o produto no catálogo.</p>
           </div>
 
           <Link
             to="/admin/produtos"
             className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
           >
-            Voltar para lista
+            Voltar para a lista
           </Link>
         </div>
       </header>
 
+      <nav aria-label="Etapas do cadastro" className="grid grid-cols-2 gap-2 rounded-2xl border border-cacao-200 bg-white p-3 shadow-card sm:grid-cols-4">
+        {[
+          ['dados-produto', '1. Dados básicos'],
+          ['estoque-produto', '2. Estoque'],
+          ['categorias-produto', '3. Categorias'],
+          ['imagens-produto', '4. Imagens'],
+        ].map(([target, label]) => (
+          <a
+            key={target}
+            href={`#${target}`}
+            className="rounded-xl px-3 py-2 text-center text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
       <form className="grid gap-6" onSubmit={onSubmit}>
-        <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-          <h2 className="mb-4 text-2xl text-cacao-900">Dados do produto</h2>
+        <section id="dados-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+          <h2 className="text-xl text-cacao-900">Dados básicos</h2>
+          <p className="mb-4 mt-1 text-sm text-cacao-600">Nome, identificação, peso, preço e disponibilidade.</p>
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
@@ -290,7 +309,7 @@ export function AdminProdutoCreatePage() {
             </label>
 
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-cacao-700">Preco</span>
+              <span className="mb-1 block text-sm font-medium text-cacao-700">Preço</span>
               <input
                 className="w-full rounded-xl border border-cacao-200 px-3 py-2 outline-none ring-cacao-600/50 transition focus:ring"
                 type="number"
@@ -313,8 +332,9 @@ export function AdminProdutoCreatePage() {
           </label>
         </section>
 
-        <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-          <h2 className="mb-4 text-2xl text-cacao-900">Estoque</h2>
+        <section id="estoque-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+          <h2 className="text-xl text-cacao-900">Estoque inicial</h2>
+          <p className="mb-4 mt-1 text-sm text-cacao-600">Defina o saldo inicial e o alerta de reposição.</p>
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
@@ -330,7 +350,7 @@ export function AdminProdutoCreatePage() {
             </label>
 
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-cacao-700">Quantidade minima</span>
+              <span className="mb-1 block text-sm font-medium text-cacao-700">Quantidade mínima</span>
               <input
                 className="w-full rounded-xl border border-cacao-200 px-3 py-2 outline-none ring-cacao-600/50 transition focus:ring"
                 type="number"
@@ -343,8 +363,9 @@ export function AdminProdutoCreatePage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-          <h2 className="mb-4 text-2xl text-cacao-900">Categorias</h2>
+        <section id="categorias-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+          <h2 className="text-xl text-cacao-900">Categorias</h2>
+          <p className="mb-4 mt-1 text-sm text-cacao-600">Selecione uma ou mais categorias para organizar o catálogo.</p>
 
           {isLoadingMeta ? (
             <p className="text-sm text-cacao-700">Carregando categorias...</p>
@@ -366,13 +387,14 @@ export function AdminProdutoCreatePage() {
           )}
         </section>
 
-        <section className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-          <h2 className="mb-4 text-2xl text-cacao-900">Imagens</h2>
+        <section id="imagens-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+          <h2 className="text-xl text-cacao-900">Imagens do produto</h2>
+          <p className="mb-5 mt-1 text-sm text-cacao-600">Adicione imagens por URL ou envie arquivos. A primeira imagem principal aparece no catálogo.</p>
 
           <div className="space-y-6">
             <div>
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-cacao-900">Adicionar por URL</h3>
+                <h3 className="text-base font-semibold text-cacao-900">Adicionar por URL</h3>
                 <button
                   type="button"
                   onClick={addImageUrlRow}
@@ -388,6 +410,7 @@ export function AdminProdutoCreatePage() {
                     <input
                       className="w-full rounded-xl border border-cacao-200 px-3 py-2 outline-none ring-cacao-600/50 transition focus:ring"
                       placeholder="https://..."
+                      aria-label="URL da imagem"
                       value={image.url}
                       onChange={(event) => onImageUrlChange(image.id, 'url', event.target.value)}
                     />
@@ -396,6 +419,7 @@ export function AdminProdutoCreatePage() {
                       className="w-full rounded-xl border border-cacao-200 px-3 py-2 outline-none ring-cacao-600/50 transition focus:ring"
                       type="number"
                       min={0}
+                      aria-label="Ordem da imagem"
                       value={image.ordem}
                       onChange={(event) => onImageUrlChange(image.id, 'ordem', Number(event.target.value))}
                     />
@@ -453,7 +477,7 @@ export function AdminProdutoCreatePage() {
                     checked={uploadFirstAsPrincipal}
                     onChange={(event) => setUploadFirstAsPrincipal(event.target.checked)}
                   />
-                  Primeira imagem como principal?
+                  Definir a primeira imagem como principal
                 </label>
               </div>
 
@@ -490,11 +514,12 @@ export function AdminProdutoCreatePage() {
         {error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
         {success ? <p className="rounded-xl bg-mint-100 px-3 py-2 text-sm text-mint-700">{success}</p> : null}
 
-        <div>
+        <div className="sticky bottom-3 z-20 flex flex-col gap-3 rounded-2xl border border-cacao-200 bg-white/95 p-4 shadow-card backdrop-blur sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-cacao-600">Revise os dados antes de cadastrar o produto.</p>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-full bg-cacao-700 px-6 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-full bg-cacao-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isSubmitting ? 'Criando...' : 'Criar produto'}
           </button>

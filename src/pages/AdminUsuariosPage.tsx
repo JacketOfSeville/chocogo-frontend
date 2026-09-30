@@ -28,7 +28,7 @@ function getRoleLabel(roleId?: number): string {
   }
 
   if (roleId === 1) {
-    return 'Usuario'
+    return 'Usuário'
   }
 
   return 'Desconhecido'
@@ -84,7 +84,7 @@ export function AdminUsuariosPage() {
           return
         }
 
-        const message = loadError instanceof Error ? loadError.message : 'Falha ao carregar usuarios.'
+        const message = loadError instanceof Error ? loadError.message : 'Falha ao carregar usuários.'
         setError(message)
       } finally {
         if (mounted) {
@@ -109,12 +109,14 @@ export function AdminUsuariosPage() {
       <header className="rounded-3xl border border-cacao-200/90 bg-white/80 p-6 shadow-card backdrop-blur-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Modulo</p>
-            <h2 className="text-3xl text-cacao-900">Usuarios</h2>
-            <p className="mt-1 text-sm text-cacao-700">Visualize dados de conta, enderecos e pedidos por usuario.</p>
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Módulo</p>
+            <h2 className="text-3xl text-cacao-900">Usuários</h2>
+            <p className="mt-1 text-sm text-cacao-700">Consulte os dados da conta, os endereços e os pedidos de cada usuário.</p>
           </div>
 
-          <p className="rounded-full bg-cacao-100 px-4 py-2 text-sm font-semibold text-cacao-800">{orderedUsuarios.length} usuario(s)</p>
+          <p className="rounded-full bg-cacao-100 px-4 py-2 text-sm font-semibold text-cacao-800">
+            {orderedUsuarios.length} {orderedUsuarios.length === 1 ? 'usuário' : 'usuários'}
+          </p>
         </div>
       </header>
 
@@ -122,9 +124,9 @@ export function AdminUsuariosPage() {
 
       <section className="overflow-hidden rounded-2xl border border-cacao-200 bg-white shadow-card">
         {isLoading ? (
-          <p className="p-5 text-sm text-cacao-700">Carregando usuarios...</p>
+          <p className="p-5 text-sm text-cacao-700">Carregando usuários...</p>
         ) : orderedUsuarios.length === 0 ? (
-          <p className="p-5 text-sm text-cacao-700">Nenhum usuario encontrado.</p>
+          <p className="p-5 text-sm text-cacao-700">Nenhum usuário encontrado.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full border-collapse text-sm">
@@ -132,10 +134,10 @@ export function AdminUsuariosPage() {
                 <tr>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">ID</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Nome</th>
-                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Permissao</th>
+                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Permissão</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Email</th>
                   <th className="px-4 py-3 text-left font-semibold text-cacao-700">Telefone</th>
-                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Criacao</th>
+                  <th className="px-4 py-3 text-left font-semibold text-cacao-700">Criação</th>
                   <th className="px-4 py-3 text-right font-semibold text-cacao-700">Acao</th>
                 </tr>
               </thead>
