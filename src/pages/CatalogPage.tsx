@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { UserTopbar } from '../components/UserTopbar'
 import { CatalogGrid } from '../components/catalog/CatalogGrid'
 import { CatalogEmptyState, CatalogErrorState, CatalogLoadingState } from '../components/catalog/CatalogStates'
 import { getCatalogProducts, type CatalogProduct } from '../lib/catalogService'
@@ -10,7 +10,6 @@ import { addProdutoAoCarrinho } from '../lib/cartApi'
 type LoadStatus = 'loading' | 'success' | 'empty' | 'error'
 
 export function CatalogPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
   const [session, setSession] = useState(() => getSession())
   const [status, setStatus] = useState<LoadStatus>('loading')
@@ -24,7 +23,6 @@ export function CatalogPage() {
   const [error, setError] = useState('')
 
   const normalizedNameFilter = nameFilter.trim().toLocaleLowerCase('pt-BR')
-  const isAdmin = session?.user.roleId === 2
   const accessToken = session?.accessToken
 
   function onLogout() {
@@ -60,7 +58,7 @@ export function CatalogPage() {
     setModalError('')
 
     try {
-      await addProdutoAoCarrinho(selectedProduct.id, modalQuantity, accessToken)
+      await addProdutoAoCarrinho(selectedProduct.id, modalQuantity, accessToken, session?.user.id)
       closeProductModal()
     } catch (addError) {
       const message = addError instanceof Error ? addError.message : 'Nao foi possivel adicionar ao carrinho.'
@@ -152,158 +150,7 @@ export function CatalogPage() {
 
   return (
     <main className="catalog-shell">
-      <header className="catalog-topbar">
-        <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 md:px-8">
-          <Link to="/" className="text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600 transition hover:text-cacao-800">
-            ChocoGo
-          </Link>
-
-          {/* Desktop */}
-          <div className="hidden sm:flex flex-wrap items-center justify-end gap-2">
-            {session ? (
-              <>
-                <span className="px-2 text-sm font-medium text-cacao-700">Ola, {session.user.nome}</span>
-                <Link
-                  to="/minha-conta"
-                  className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
-                >
-                  Minha conta
-                </Link>
-                <Link
-                  to="/meus-enderecos"
-                  className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
-                >
-                  Meus endereços
-                </Link>
-                <Link
-                  to="/meus-pedidos"
-                  className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
-                >
-                  Meus pedidos
-                </Link>
-                <button
-                  type="button"
-                  onClick={onLogout}
-                  className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
-                >
-                  Sair
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
-                >
-                  Log in
-                </Link>
-                <Link
-                  to="/register"
-                  className="inline-flex items-center justify-center rounded-full bg-cacao-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900"
-                >
-                  Register
-                </Link>
-              </>
-            )}
-
-            {isAdmin ? (
-              <Link
-                to="/admin/produtos"
-                className="inline-flex items-center justify-center rounded-full bg-cacao-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900"
-              >
-                Area Admin
-              </Link>
-            ) : null}
-          </div>
-
-          {/* Hamburger mobile */}
-          <div className="sm:hidden flex items-center">
-            <button
-              type="button"
-              aria-label="Abrir menu"
-              className="inline-flex items-center justify-center rounded-full border border-cacao-300 p-2 text-cacao-700 hover:bg-cacao-50 focus:outline-none"
-              onClick={() => setMobileMenuOpen((open) => !open)}
-            >
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            {/* Dropdown menu */}
-            {mobileMenuOpen && (
-              <div className="absolute right-4 top-14 z-50 min-w-[160px] rounded-xl border border-cacao-200 bg-white shadow-lg">
-                {session ? (
-                  <>
-                    <button
-                      type="button"
-                      className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
-                      disabled
-                    >
-                      Ola, {session.user.nome}
-                    </button>
-                    <Link
-                      to="/minha-conta"
-                      className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Minha conta
-                    </Link>
-                    <Link
-                      to="/meus-enderecos"
-                      className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Meus endereços
-                    </Link>
-                    <Link
-                      to="/meus-pedidos"
-                      className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Meus pedidos
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMobileMenuOpen(false)
-                        onLogout()
-                      }}
-                      className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
-                    >
-                      Sair
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      className="block w-full px-4 py-2 text-left text-sm text-cacao-700 hover:bg-cacao-50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Log in
-                    </Link>
-                    <Link
-                      to="/register"
-                      className="block w-full px-4 py-2 text-left text-sm text-white bg-cacao-700 hover:bg-cacao-900"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Register
-                    </Link>
-                  </>
-                )}
-                {isAdmin ? (
-                  <Link
-                    to="/admin/produtos"
-                    className="block w-full px-4 py-2 text-left text-sm text-white bg-cacao-700 hover:bg-cacao-900"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Area Admin
-                  </Link>
-                ) : null}
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
+      <UserTopbar session={session} onLogout={onLogout} />
 
       <section className="catalog-header">
         <h1 className="mb-3 text-3xl text-cacao-900 sm:text-4xl">Catalogo Principal</h1>

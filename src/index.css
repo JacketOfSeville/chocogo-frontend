@@ -52,14 +52,14 @@
   }
 
   .admin-shell {
-    @apply mx-auto grid min-h-screen w-full max-w-7xl gap-4 px-4 pb-8 pt-6 sm:px-6 md:grid-cols-[250px_minmax(0,1fr)] md:px-8;
+    @apply grid min-h-screen w-full gap-4 px-4 pb-8 pt-6 sm:px-6 md:grid-cols-[250px_minmax(0,1fr)] md:gap-6 md:px-0 md:py-0;
   }
 
   .admin-sidebar {
-    @apply sticky top-4 flex h-fit min-h-[220px] flex-col rounded-3xl border border-cacao-200 bg-white/90 p-4 shadow-card backdrop-blur-sm;
+    @apply sticky top-4 flex h-fit min-h-[220px] flex-col rounded-3xl border border-cacao-200 bg-white/90 p-4 shadow-card backdrop-blur-sm md:top-0 md:h-screen md:min-h-screen md:rounded-none md:rounded-r-3xl md:border-y-0 md:border-l-0;
   }
 
   .admin-content {
-    @apply min-w-0;
+    @apply min-w-0 md:px-6 md:py-6;
   }
 }

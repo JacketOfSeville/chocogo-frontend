@@ -121,26 +121,27 @@ export async function listCarrinhos(token: string): Promise<Carrinho[]> {
   return requestApi<Carrinho[]>('/carrinhos', { token })
 }
 
-export async function createCarrinho(token: string): Promise<Carrinho> {
+export async function createCarrinho(token: string, userId?: number): Promise<Carrinho> {
   const carrinho = await requestApi<Carrinho>('/carrinhos', {
     method: 'POST',
     token,
-    body: {},
+    body: userId !== undefined ? { id_usuario: userId } : {},
   })
 
   persistCarrinhoId(carrinho.id)
   return carrinho
 }
 
-export async function ensureCarrinho(token: string): Promise<Carrinho> {
+export async function ensureCarrinho(token: string, userId?: number): Promise<Carrinho> {
   const carrinhos = await listCarrinhos(token)
+  const carrinho = userId === undefined ? carrinhos[0] : carrinhos.find((item) => item.id_usuario === userId)
 
-  if (carrinhos.length > 0) {
-    persistCarrinhoId(carrinhos[0].id)
-    return carrinhos[0]
+  if (carrinho) {
+    persistCarrinhoId(carrinho.id)
+    return carrinho
   }
 
-  return createCarrinho(token)
+  return createCarrinho(token, userId)
 }
 
 export async function listCarrinhoItens(carrinhoId: number, token: string): Promise<CarrinhoItem[]> {
@@ -186,8 +187,8 @@ export async function deleteCarrinhoItem(id: number, token: string): Promise<voi
   notifyCartUpdated()
 }
 
-export async function addProdutoAoCarrinho(produtoId: number, quantidade: number, token: string): Promise<void> {
-  const carrinho = await ensureCarrinho(token)
+export async function addProdutoAoCarrinho(produtoId: number, quantidade: number, token: string, userId?: number): Promise<void> {
+  const carrinho = await ensureCarrinho(token, userId)
   const itens = await listCarrinhoItens(carrinho.id, token)
   const existente = itens.find((item) => item.id_produto === produtoId)
 
@@ -206,16 +207,17 @@ export async function addProdutoAoCarrinho(produtoId: number, quantidade: number
   )
 }
 
-export async function getCartItemCount(token: string): Promise<number> {
+export async function getCartItemCount(token: string, userId?: number): Promise<number> {
   try {
     const carrinhos = await listCarrinhos(token)
+    const carrinho = userId === undefined ? carrinhos[0] : carrinhos.find((item) => item.id_usuario === userId)
 
-    if (carrinhos.length === 0) {
+    if (!carrinho) {
       persistCarrinhoItens([])
       return 0
     }
 
-    const itens = await listCarrinhoItens(carrinhos[0].id, token)
+    const itens = await listCarrinhoItens(carrinho.id, token)
     return itens.reduce((total, item) => total + item.quantidade, 0)
   } catch {
     const itens = getPersistedCarrinhoItens()

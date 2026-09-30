@@ -18,6 +18,22 @@ function isPushSupported(): boolean {
   return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window
 }
 
+async function saveSubscriptionForUser(subscription: PushSubscription, accessToken: string): Promise<void> {
+  const keys = subscription.toJSON().keys
+
+  if (!keys?.p256dh || !keys.auth) {
+    throw new Error('Falha ao gerar credenciais de notificacao.')
+  }
+
+  await subscribeToPush(
+    {
+      endpoint: subscription.endpoint,
+      keys: { p256dh: keys.p256dh, auth: keys.auth },
+    },
+    accessToken,
+  )
+}
+
 interface UsePushNotificationsResult {
   isSupported: boolean
   isSubscribed: boolean
@@ -46,6 +62,10 @@ export function usePushNotifications(accessToken?: string): UsePushNotifications
         const registration = await navigator.serviceWorker.ready
         const existing = await registration.pushManager.getSubscription()
 
+        if (existing && accessToken) {
+          await saveSubscriptionForUser(existing, accessToken)
+        }
+
         if (mounted) {
           setIsSubscribed(Boolean(existing))
         }
@@ -65,7 +85,7 @@ export function usePushNotifications(accessToken?: string): UsePushNotifications
     return () => {
       mounted = false
     }
-  }, [isSupported])
+  }, [accessToken, isSupported])
 
   const subscribe = useCallback(async () => {
     if (!isSupported || !accessToken) {
@@ -85,25 +105,13 @@ export function usePushNotifications(accessToken?: string): UsePushNotifications
 
       const publicKey = await getPushPublicKey()
       const registration = await navigator.serviceWorker.ready
+      const subscription = await registration.pushManager.getSubscription()
+        ?? await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(publicKey),
+        })
 
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(publicKey),
-      })
-
-      const rawKeys = subscription.toJSON().keys
-
-      if (!rawKeys?.p256dh || !rawKeys.auth) {
-        throw new Error('Falha ao gerar credenciais de notificacao.')
-      }
-
-      await subscribeToPush(
-        {
-          endpoint: subscription.endpoint,
-          keys: { p256dh: rawKeys.p256dh, auth: rawKeys.auth },
-        },
-        accessToken,
-      )
+      await saveSubscriptionForUser(subscription, accessToken)
 
       setIsSubscribed(true)
     } catch (subscribeError) {

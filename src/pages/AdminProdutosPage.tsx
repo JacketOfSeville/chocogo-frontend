@@ -323,10 +323,20 @@ export function AdminProdutosPage() {
                         <button
                           type="button"
                           onClick={() => onDeleteProduto(produto.id, produto.nome)}
-                          disabled={isDeletingId === produto.id}
+                          disabled={isDeletingId === produto.id || (produto._count?.itens ?? 0) > 0}
+                          title={
+                            (produto._count?.itens ?? 0) > 0
+                              ? 'Este produto faz parte de pedidos e não pode ser excluído.'
+                              : `Excluir ${produto.nome}`
+                          }
+                          aria-label={
+                            (produto._count?.itens ?? 0) > 0
+                              ? `${produto.nome} faz parte de pedidos e não pode ser excluído`
+                              : `Excluir ${produto.nome}`
+                          }
                           className="rounded-full bg-red-600 px-3 py-1.5 font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          {isDeletingId === produto.id ? 'Excluindo...' : 'Excluir'}
+                          {isDeletingId === produto.id ? 'Excluindo...' : (produto._count?.itens ?? 0) > 0 ? 'Em pedido' : 'Excluir'}
                         </button>
                       </div>
                     </td>

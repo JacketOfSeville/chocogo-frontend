@@ -31,6 +31,9 @@ export interface ProdutoResponse {
   peso_gramas: number
   preco: string
   ativo: boolean
+  _count?: {
+    itens: number
+  }
 }
 
 export interface CreateEstoqueInput {

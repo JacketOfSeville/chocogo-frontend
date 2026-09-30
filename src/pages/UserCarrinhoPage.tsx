@@ -47,6 +47,7 @@ export function UserCarrinhoPage() {
   const [enderecoId, setEnderecoId] = useState<number | null>(null)
 
   const accessToken = session?.accessToken
+  const userId = session?.user.id
 
   const itemDetails = useMemo(() => {
     return items
@@ -67,7 +68,7 @@ export function UserCarrinhoPage() {
 
   // Load API on token change, always fetch fresh data from server
   useEffect(() => {
-    if (!accessToken) {
+    if (!accessToken || userId === undefined) {
       return
     }
 
@@ -80,7 +81,7 @@ export function UserCarrinhoPage() {
 
       try {
         const [carrinho, catalogProducts, userEnderecos] = await Promise.all([
-          ensureCarrinho(token),
+          ensureCarrinho(token, userId),
           getCatalogProducts({ includeInactive: true }),
           listEnderecos(token),
         ])
@@ -117,7 +118,7 @@ export function UserCarrinhoPage() {
     return () => {
       mounted = false
     }
-  }, [accessToken])
+  }, [accessToken, userId])
 
   // Persist to localStorage
   useEffect(() => {

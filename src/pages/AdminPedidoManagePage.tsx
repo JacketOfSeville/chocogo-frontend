@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { getCatalogProducts, type CatalogProduct } from '../lib/catalogService'
 import { getAdminSession } from '../lib/authStorage'
 import { getPedido, listPedidoItens, updatePedido } from '../lib/pedidoApi'
@@ -74,7 +74,6 @@ function statusBadgeClass(statusId: number): string {
 
 export function AdminPedidoManagePage() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
   const session = getAdminSession()
 
   const [pedido, setPedido] = useState<Pedido | null>(null)
@@ -270,87 +269,93 @@ export function AdminPedidoManagePage() {
 
   return (
     <section className="space-y-5">
-      <header className="rounded-3xl border border-cacao-200/90 bg-white/80 p-6 shadow-card backdrop-blur-sm">
+      <header className="rounded-3xl border border-cacao-200/90 bg-white/85 p-6 shadow-card backdrop-blur-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">Pedidos</p>
             <h2 className="text-3xl text-cacao-900">Gerenciar pedido</h2>
-            <p className="mt-1 text-sm text-cacao-700">Altere situacao, finalize ou cancele o pedido.</p>
+            <p className="mt-1 text-sm text-cacao-700">Confira os detalhes e atualize o andamento do pedido.</p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => navigate('/admin/pedidos')}
-              className="rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
-            >
-              Voltar para lista
-            </button>
-          </div>
+          <Link
+            to="/admin/pedidos"
+            className="inline-flex items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
+          >
+            Voltar para pedidos
+          </Link>
         </div>
       </header>
 
-      {error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
-      {success ? <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{success}</p> : null}
+      {error ? <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
+      {success ? <p role="status" className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{success}</p> : null}
 
       {isLoading ? (
         <p className="rounded-2xl border border-cacao-200 bg-white p-5 text-sm text-cacao-700 shadow-card">Carregando pedido...</p>
       ) : pedido ? (
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)]">
           <section className="space-y-5">
-            <article className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+            <article className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card sm:p-6">
               <div className="flex flex-wrap items-center gap-3">
                 <h3 className="text-2xl text-cacao-900">Pedido #{pedido.id}</h3>
                 <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusBadgeClass(pedido.id_status_pedido)}`}>
                   {getOrderStatusLabel(pedido.id_status_pedido)}
                 </span>
+                {pedido.entregue ? (
+                  <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">Entregue</span>
+                ) : pedido.pronto_retirada ? (
+                  <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">Pronto para retirada</span>
+                ) : null}
               </div>
 
-              <dl className="mt-4 grid gap-3 text-sm text-cacao-800 sm:grid-cols-2">
+              <dl className="mt-5 grid gap-x-8 gap-y-4 text-sm sm:grid-cols-2">
                 <div>
                   <dt className="text-cacao-600">Cliente</dt>
-                  <dd className="font-semibold text-cacao-900">{clienteNome || 'Cliente desconhecido'}</dd>
+                  <dd className="mt-0.5 font-semibold text-cacao-900">{clienteNome || 'Cliente desconhecido'}</dd>
                 </div>
                 <div>
-                  <dt className="text-cacao-600">Data</dt>
-                  <dd className="font-semibold text-cacao-900">{parsePedidoDate(pedido)}</dd>
+                  <dt className="text-cacao-600">Data do pedido</dt>
+                  <dd className="mt-0.5 font-semibold text-cacao-900">{parsePedidoDate(pedido)}</dd>
                 </div>
                 <div>
-                  <dt className="text-cacao-600">Entrega</dt>
-                  <dd className="font-semibold text-cacao-900">{getDeliveryTypeLabel(pedido.id_tipo_entrega)}</dd>
+                  <dt className="text-cacao-600">Tipo de entrega</dt>
+                  <dd className="mt-0.5 font-semibold text-cacao-900">{getDeliveryTypeLabel(pedido.id_tipo_entrega)}</dd>
                 </div>
                 <div>
                   <dt className="text-cacao-600">Pagamento</dt>
-                  <dd className="font-semibold text-cacao-900">{pedido.meio_pagamento}</dd>
+                  <dd className="mt-0.5 font-semibold text-cacao-900">{pedido.meio_pagamento}</dd>
                 </div>
               </dl>
             </article>
 
-            <article className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-              <h3 className="text-xl text-cacao-900">Itens do pedido</h3>
+            <article className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card sm:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="text-xl text-cacao-900">Itens do pedido</h3>
+                <span className="text-sm text-cacao-600">{itemRows.length} item(ns)</span>
+              </div>
               {itemRows.length === 0 ? (
-                <p className="mt-3 text-sm text-cacao-700">Nenhum item neste pedido.</p>
+                <p className="mt-4 rounded-xl bg-cacao-50 p-4 text-sm text-cacao-700">Nenhum item neste pedido.</p>
               ) : (
-                <div className="mt-4 space-y-3">
+                <div className="mt-4 divide-y divide-cacao-100">
                   {itemRows.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between gap-3 rounded-xl border border-cacao-100 p-3">
-                      <div className="flex items-center gap-3">
+                    <div key={item.id} className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
+                      <div className="flex min-w-0 items-center gap-3">
                         {item.imageUrl ? (
                           <img
                             src={item.imageUrl}
                             alt={item.productName}
-                            className="h-12 w-12 rounded-lg border border-cacao-100 bg-cacao-50 object-cover"
+                            className="size-14 shrink-0 rounded-lg border border-cacao-100 bg-cacao-50 object-cover"
                           />
-                        ) : null}
-                        <div>
-                          <p className="font-semibold text-cacao-900">{item.productName}</p>
-                          <p className="text-sm text-cacao-700">
-                            {item.quantidade}x {currency.format(Number(item.preco_momento))}
+                        ) : (
+                          <div className="size-14 shrink-0 rounded-lg border border-cacao-100 bg-cacao-50" aria-hidden="true" />
+                        )}
+                        <div className="min-w-0">
+                          <p className="truncate font-semibold text-cacao-900">{item.productName}</p>
+                          <p className="mt-0.5 text-sm text-cacao-700">
+                            {item.quantidade} un. <span className="text-cacao-400">·</span> {currency.format(Number(item.preco_momento))} cada
                           </p>
                         </div>
                       </div>
-
-                      <p className="text-sm font-semibold text-cacao-900">{currency.format(Number(item.subtotal))}</p>
+                      <p className="shrink-0 text-sm font-semibold text-cacao-900">{currency.format(Number(item.subtotal))}</p>
                     </div>
                   ))}
                 </div>
@@ -358,39 +363,47 @@ export function AdminPedidoManagePage() {
             </article>
           </section>
 
-          <aside className="space-y-5">
-            <article className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
+          <aside className="space-y-5 lg:sticky lg:top-6">
+            <article className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card sm:p-6">
               <h3 className="text-xl text-cacao-900">Resumo financeiro</h3>
 
-              <div className="mt-4 space-y-2 rounded-xl bg-cacao-50 p-3 text-sm text-cacao-800">
-                <p className="flex items-center justify-between">
-                  <span>Produtos</span>
-                  <strong>{currency.format(valorProdutos)}</strong>
-                </p>
-                <p className="flex items-center justify-between">
-                  <span>Frete</span>
-                  <strong>{currency.format(valorFrete)}</strong>
-                </p>
-                <p className="flex items-center justify-between border-t border-cacao-200 pt-2 text-base text-cacao-900">
-                  <span>Total</span>
-                  <strong>{currency.format(valorTotal)}</strong>
-                </p>
-              </div>
+              <dl className="mt-4 space-y-3 rounded-xl bg-cacao-50 p-4 text-sm text-cacao-800">
+                <div className="flex items-center justify-between gap-4">
+                  <dt>Produtos</dt>
+                  <dd className="font-semibold">{currency.format(valorProdutos)}</dd>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <dt>Frete</dt>
+                  <dd className="font-semibold">{currency.format(valorFrete)}</dd>
+                </div>
+                <div className="flex items-center justify-between gap-4 border-t border-cacao-200 pt-3 text-base text-cacao-900">
+                  <dt className="font-semibold">Total</dt>
+                  <dd className="text-lg font-bold">{currency.format(valorTotal)}</dd>
+                </div>
+              </dl>
             </article>
 
-            <article className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
-              <h3 className="text-xl text-cacao-900">Acoes de status</h3>
+            <article className="rounded-2xl border border-cacao-200 bg-white p-5 shadow-card sm:p-6">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 className="text-xl text-cacao-900">Atualizar pedido</h3>
+                  <p className="mt-1 text-sm text-cacao-600">Situação atual: {getOrderStatusLabel(pedido.id_status_pedido)}</p>
+                </div>
+                <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusBadgeClass(pedido.id_status_pedido)}`}>
+                  {getOrderStatusLabel(pedido.id_status_pedido)}
+                </span>
+              </div>
 
-              <div className="mt-4 space-y-3">
+              <div className="mt-5 space-y-2">
                 <label className="block text-sm font-semibold text-cacao-700" htmlFor="status-pedido">
-                  Alterar manualmente
+                  Alterar situação manualmente
                 </label>
                 <select
                   id="status-pedido"
                   value={selectedStatusId}
                   onChange={(event) => setSelectedStatusId(Number(event.target.value))}
                   disabled={isSaving}
-                  className="w-full rounded-xl border border-cacao-300 px-3 py-2 text-sm text-cacao-900 focus:border-cacao-500 focus:outline-none focus:ring-2 focus:ring-cacao-200 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="w-full rounded-xl border border-cacao-300 bg-white px-3 py-2.5 text-sm text-cacao-900 focus:border-cacao-500 focus:outline-none focus:ring-2 focus:ring-cacao-200 disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {Object.entries(ORDER_STATUS_LABELS).map(([statusId, label]) => (
                     <option key={statusId} value={Number(statusId)}>
@@ -398,77 +411,78 @@ export function AdminPedidoManagePage() {
                     </option>
                   ))}
                 </select>
-
                 <button
                   type="button"
                   onClick={onSaveManualStatus}
-                  disabled={isSaving}
-                  className="w-full rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50 disabled:cursor-not-allowed disabled:opacity-70"
+                  disabled={isSaving || selectedStatusId === pedido.id_status_pedido}
+                  className="w-full rounded-xl border border-cacao-300 px-4 py-2.5 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {isSaving ? 'Salvando...' : 'Salvar status'}
+                  {isSaving ? 'Salvando...' : 'Salvar situação'}
                 </button>
+              </div>
 
-                <button
-                  type="button"
-                  onClick={onAdvanceStatus}
-                  disabled={isSaving || !canAdvance || isCanceled || isDone}
-                  className="w-full rounded-full bg-cacao-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  Avancar para proximo status
-                </button>
+              <div className="mt-5 border-t border-cacao-100 pt-5">
+                <p className="text-xs font-semibold uppercase text-cacao-500">Próximo passo</p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+                  <button
+                    type="button"
+                    onClick={onAdvanceStatus}
+                    disabled={isSaving || !canAdvance || isCanceled || isDone}
+                    className="w-full rounded-xl bg-cacao-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {canAdvance ? `Avançar para ${getOrderStatusLabel(NEXT_STATUS_MAP[pedido.id_status_pedido])}` : 'Sem próximo status'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onMarkAsDone}
+                    disabled={isSaving || isDone || isCanceled}
+                    className="w-full rounded-xl border border-emerald-300 px-4 py-3 text-sm font-semibold text-emerald-800 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Marcar como concluído
+                  </button>
+                </div>
+              </div>
 
-                <button
-                  type="button"
-                  onClick={onMarkAsDone}
-                  disabled={isSaving || isDone || isCanceled}
-                  className="w-full rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-70"
-                >
-                  Marcar como concluido
-                </button>
+              {isRetirada || isEntrega ? (
+                <div className="mt-5 border-t border-cacao-100 pt-5">
+                  <p className="text-xs font-semibold uppercase text-cacao-500">Confirmação de {isRetirada ? 'retirada' : 'entrega'}</p>
+                  {isRetirada ? (
+                    <button
+                      type="button"
+                      onClick={onToggleProntoRetirada}
+                      disabled={isSaving || isCanceled}
+                      className="mt-3 w-full rounded-xl border border-amber-300 px-4 py-2.5 text-sm font-semibold text-amber-800 transition hover:bg-amber-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {pedido.pronto_retirada ? 'Desmarcar como pronto para retirada' : 'Marcar como pronto para retirada'}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={onToggleEntregue}
+                      disabled={isSaving || isCanceled}
+                      className="mt-3 w-full rounded-xl border border-sky-300 px-4 py-2.5 text-sm font-semibold text-sky-800 transition hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {pedido.entregue ? 'Desmarcar como entregue' : 'Marcar como entregue'}
+                    </button>
+                  )}
+                </div>
+              ) : null}
 
+              <div className="mt-5 border-t border-red-100 pt-4">
                 <button
                   type="button"
                   onClick={onCancelPedido}
                   disabled={isSaving || isCanceled || isDone}
-                  className="w-full rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="w-full rounded-xl border border-red-200 px-4 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Cancelar pedido
+                  {isCanceled ? 'Pedido cancelado' : 'Cancelar pedido'}
                 </button>
-
-                {isRetirada ? (
-                  <button
-                    type="button"
-                    onClick={onToggleProntoRetirada}
-                    disabled={isSaving || isCanceled}
-                    className="w-full rounded-full bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {pedido?.pronto_retirada ? 'Remover pronto para retirada' : 'Marcar como pronto para retirada'}
-                  </button>
-                ) : null}
-
-                {isEntrega ? (
-                  <button
-                    type="button"
-                    onClick={onToggleEntregue}
-                    disabled={isSaving || isCanceled}
-                    className="w-full rounded-full bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-sky-700 disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    {pedido?.entregue ? 'Remover entregue' : 'Marcar como entregue'}
-                  </button>
-                ) : null}
-
-                <Link
-                  to="/admin/pedidos"
-                  className="block rounded-full border border-cacao-300 px-4 py-2 text-center text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
-                >
-                  Voltar para pedidos
-                </Link>
               </div>
             </article>
           </aside>
         </div>
       ) : (
-        <p className="rounded-2xl border border-cacao-200 bg-white p-5 text-sm text-cacao-700 shadow-card">Pedido nao encontrado.</p>
+        <p className="rounded-2xl border border-cacao-200 bg-white p-5 text-sm text-cacao-700 shadow-card">Pedido não encontrado.</p>
       )}
     </section>
   )

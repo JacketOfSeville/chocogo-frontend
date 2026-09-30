@@ -27,17 +27,18 @@ export function UserCartFab() {
   const accessToken = session?.accessToken
 
   useEffect(() => {
-    if (!session || session.user.roleId !== 1 || !accessToken) {
+    if (!session || !accessToken) {
       return
     }
 
     const token = accessToken
+    const userId = session.user.id
 
     let mounted = true
 
     async function refreshCount() {
       try {
-        const total = await getCartItemCount(token)
+        const total = await getCartItemCount(token, userId)
         if (mounted) {
           setItemCount(total)
         }
@@ -68,10 +69,6 @@ export function UserCartFab() {
     }
   }, [accessToken, location.pathname, session])
 
-  if (!session || session.user.roleId !== 1) {
-    return null
-  }
-
   if (shouldHideCartFab(location.pathname)) {
     return null
   }
@@ -80,10 +77,10 @@ export function UserCartFab() {
     <Link
       to="/carrinho"
       className="fixed bottom-6 right-6 z-50 inline-flex items-center gap-2 rounded-full bg-cacao-700 px-4 py-3 text-sm font-semibold text-white shadow-lg transition hover:bg-cacao-900"
-      aria-label="Ir para o carrinho"
+      aria-label={session ? `Ir para o carrinho, ${itemCount} itens` : 'Ir para o carrinho'}
     >
       <span aria-hidden="true">🛒</span>
-      Carrinho ({itemCount})
+      Carrinho ({session ? itemCount : 0})
     </Link>
   )
 }

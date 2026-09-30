@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { UserTopbar } from '../components/UserTopbar'
 import { loginUser } from '../lib/authApi'
 import { saveSession } from '../lib/authStorage'
 
@@ -33,6 +34,7 @@ export function LoginPage() {
 
   return (
     <main className="catalog-shell">
+      <UserTopbar session={null} />
       <section className="mx-auto w-full max-w-xl rounded-3xl border border-cacao-200 bg-white p-6 shadow-card sm:p-8">
         <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cacao-600">ChocoGo</p>
         <h1 className="mb-2 text-3xl text-cacao-900">Login</h1>
