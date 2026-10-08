@@ -16,6 +16,8 @@ import { AdminUsuariosPage } from './pages/AdminUsuariosPage'
 import { CatalogPage } from './pages/CatalogPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
+import { PasswordRecoveryPage } from './pages/PasswordRecoveryPage'
+import { PasswordResetPage } from './pages/PasswordResetPage'
 import { OfflineStatusToast } from './components/OfflineStatusToast'
 import { UserCartFab } from './components/UserCartFab'
 import { UserEnderecoCreatePage } from './pages/UserEnderecoCreatePage'
@@ -39,6 +41,8 @@ function App() {
         <Route path="/" element={<CatalogPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/recuperar-senha" element={<PasswordRecoveryPage />} />
+        <Route path="/redefinir-senha" element={<PasswordResetPage />} />
         <Route
           path="/meus-enderecos"
           element={

@@ -65,22 +65,36 @@ export function LoginPage() {
 
           {error ? <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="rounded-full bg-cacao-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
+          <div className="space-y-4 pt-2">
+            <div className="mx-auto grid w-full max-w-sm grid-cols-2 gap-3">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-cacao-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-cacao-900 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSubmitting ? 'Entrando...' : 'Entrar'}
+              </button>
+
+              <Link
+                to="/register"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-cacao-300 px-4 py-2 text-sm font-semibold text-cacao-700 transition hover:bg-cacao-50"
+              >
+                Criar conta
+              </Link>
+            </div>
+
+            <Link
+              to="/recuperar-senha"
+              className="block text-center text-sm font-medium text-cacao-700 underline underline-offset-4"
             >
-              {isSubmitting ? 'Entrando...' : 'Entrar'}
-            </button>
-
-            <Link to="/register" className="text-sm font-medium text-cacao-700 underline underline-offset-4">
-              Criar conta
+              Esqueci minha senha
             </Link>
 
-            <Link to="/" className="text-sm font-medium text-cacao-700 underline underline-offset-4">
-              Voltar ao catálogo
-            </Link>
+            <div className="border-t border-cacao-100 pt-3 text-center">
+              <Link to="/" className="text-sm font-medium text-cacao-600 underline underline-offset-4 hover:text-cacao-900">
+                Voltar ao catálogo
+              </Link>
+            </div>
           </div>
         </form>
       </section>

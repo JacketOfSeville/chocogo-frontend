@@ -452,6 +452,7 @@ export function AdminProdutoEditPage() {
         <p className="rounded-xl border border-cacao-200 bg-white px-4 py-3 text-sm text-cacao-700">Carregando...</p>
       ) : (
         <form className="grid gap-6" onSubmit={onSubmit}>
+          <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)]">
           <section id="dados-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
             <h3 className="text-xl text-cacao-900">Dados básicos</h3>
             <p className="mb-4 mt-1 text-sm text-cacao-600">Nome, identificação, peso, preço e disponibilidade.</p>
@@ -505,14 +506,30 @@ export function AdminProdutoEditPage() {
               </label>
             </div>
 
-            <label className="mt-4 inline-flex items-center gap-2 text-sm text-cacao-700">
-              <input
-                type="checkbox"
-                checked={produto.ativo}
-                onChange={(event) => setProduto((previous) => ({ ...previous, ativo: event.target.checked }))}
-              />
-              Produto ativo
-            </label>
+            <div className="mt-5 flex items-center justify-between gap-4 rounded-xl border border-cacao-100 px-4 py-3">
+              <div>
+                <p className="text-sm font-semibold text-cacao-900">Produto ativo</p>
+                <p className="mt-0.5 text-xs text-cacao-600">
+                  {produto.ativo ? 'Disponível para venda no catálogo.' : 'Oculto do catálogo.'}
+                </p>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={produto.ativo}
+                aria-label={produto.ativo ? 'Desativar produto' : 'Ativar produto'}
+                onClick={() => setProduto((previous) => ({ ...previous, ativo: !previous.ativo }))}
+                className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors ${
+                  produto.ativo ? 'bg-emerald-600' : 'bg-red-600'
+                }`}
+              >
+                <span
+                  className={`inline-block size-5 rounded-full bg-white shadow transition-transform ${
+                    produto.ativo ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
           </section>
 
           <section id="estoque-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
@@ -547,6 +564,7 @@ export function AdminProdutoEditPage() {
               </label>
             </div>
           </section>
+          </div>
 
           <section id="categorias-produto" className="scroll-mt-4 rounded-2xl border border-cacao-200 bg-white p-5 shadow-card">
             <h3 className="text-xl text-cacao-900">Categorias</h3>

@@ -26,3 +26,4 @@ dist-ssr
 .env
 ROUTES.md
 schema.prisma
+artifacts/

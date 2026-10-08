@@ -4,6 +4,10 @@ import { getSession } from '../lib/authStorage'
 import { CART_UPDATED_EVENT, getCartItemCount } from '../lib/cartApi'
 
 function shouldHideCartFab(pathname: string): boolean {
+  if (['/login', '/register', '/recuperar-senha', '/redefinir-senha'].includes(pathname)) {
+    return true
+  }
+
   if (pathname.startsWith('/carrinho')) {
     return true
   }
